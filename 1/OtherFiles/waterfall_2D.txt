@@ -1,0 +1,10 @@
+A \textbf{waterfall plot} is a great way to visualize the \textbf{cumulative effect} of sequentially introduced positive or negative values. It provides a clear visual representation of how \textbf{individual components} contribute to the \textbf{total}. It helps in understanding the relative importance of different features. It is helpful in scenarios where decisions need to be made based on the \textbf{contribution of various factors}.
+\\[5pt]
+\textbf{An example plot}:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{assets/plots/waterfall_plot_2D.png}
+    \caption{Waterfall Plot}
+    \label{fig:waterfall_plot}
+\end{figure}
+The example plot shows the cumulative effect of each feature(transaction), such as sales, returns, credit fees, etc. It helps you understand the increment/decrement of each transaction on the total. Each bar represents the expense/income of an organization. By comparing the heights of the bars, you can quickly identify which features have the most significant impact.
