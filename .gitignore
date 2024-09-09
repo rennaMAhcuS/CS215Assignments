@@ -4,3 +4,8 @@
 
 .vscode
 .idea
+
+*.aux
+*.bbl
+*.blg
+*.log

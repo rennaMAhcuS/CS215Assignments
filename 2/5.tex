@@ -1,0 +1,293 @@
+\documentclass{article}
+\usepackage{amsmath, amsfonts, amssymb}
+
+\begin{document}
+
+\subsection*{Gaussian Mixture Model}
+
+Let \( X \) be a Gaussian Mixture Model (GMM), Its PDF is defined by:
+
+\[
+P[X = x] = \sum_{i=1}^{K} p_i \, P[X_i = x]
+\]
+
+where each \( X_i \) is a Gaussian random variable with mean \( \mu_i \) and variance \( \sigma_i^2 \), i.e.,
+
+\[
+X_i \sim \mathcal{N}(\mu_i, \sigma_i^2) \text{ for all } i \in \{1, 2, \ldots, K\}.
+\]
+
+Moreover, the mixing probabilities \( p_i \) satisfy:
+
+\[
+p_i \geq 0 \text{ and } \sum_{i=1}^{K} p_i = 1.
+\]
+
+\section*{Task B}
+\subsection*{1. Expected Value \( \mathbb{E}[X] \)}
+
+To find the expected value of \( X \), where X is a Gaussian Mixture Model.
+we use the law of total expectation:
+
+\[
+\mathbb{E}[X] = \mathbb{E}\left[\mathbb{E}[Y \mid Z]\right]
+\]
+
+Given \( Z = i \), \( Y \) follows \( \mathcal{N}(\mu_i, \sigma_i^2) \). Therefore:
+
+\[
+\mathbb{E}[Y \mid Z = i] = \mu_i
+\]
+
+Thus:
+
+\[
+\mathbb{E}[X] = \sum_{i=1}^{K} \mathbb{E}[Y \mid Z = i] \cdot \mathbb{P}(Z = i)  
+\]
+\[
+\mathbb{E}[X] = \sum_{i=1}^{K} p_i \cdot \mu_i
+\]
+
+\subsection*{2. Variance \( \text{Var}[X] \)}
+
+To find variance of \( X \), where \( X \) is GMM. We use law of total variance:
+
+\[
+\text{Var}(X) = \mathbb{E}[\text{Var}(Y \mid Z)] + \text{Var}(\mathbb{E}[Y \mid Z])
+\] \\
+
+To Calculate \( \mathbb{E}[\text{Var}(Y \mid Z)] \):
+
+Given \( Z = i \), \( Y \) follows \( \mathcal{N}(\mu_i, \sigma_i^2) \). Therefore:
+
+\[
+\text{Var}(Y \mid Z = i) = \sigma_i^2
+\]
+
+\[
+\mathbb{E}[\text{Var}(X \mid Z)] = \sum_{i=1}^{K} p_i \cdot \text{Var}(Y \mid Z = i)
+\]
+
+\[
+\mathbb{E}[\text{Var}(X \mid Z)] = \sum_{i=1}^{K} p_i \cdot \sigma_i^2
+\]
+
+To calculate \( \text{Var}(\mathbb{E}[Y \mid Z]) \):
+
+The expected value of \( Y \) given \( Z = i \) is \( \mu_i \). Therefore, the variance of these expected values is:
+
+\[
+\text{Var}(\mathbb{E}[Y \mid Z]) = \mathbb{E}[(\mathbb{E}[Y \mid Z] - \mathbb{E}[Y])^2]
+\]
+
+\[
+\text{Var}(\mathbb{E}[X \mid Z]) = \sum_{i=1}^{K} p_i (\mu_i - \mathbb{E}[Y])^2
+\]
+
+\[
+\text{Var}(\mathbb{E}[X \mid Z]) = \sum_{i=1}^{K} p_i (\mu_i - \sum_{i=1}^{K} p_i \cdot \sigma_i^2)^2
+\]
+
+Thus, the total variance is:
+
+\[
+\text{Var}(X) = \sum_{i=1}^{K} p_i \sigma_i^2 + \sum_{i=1}^{K} p_i (\mu_i - \sum_{i=1}^{K} p_i \cdot \sigma_i^2)^2
+\]
+
+In simplified form:
+\[
+\text{Var}(X) =
+\sum_{i=1}^K p_i (\sigma_i^2 + \mu_i^2) - \left( \sum_{i=1}^K p_i \mu_i \right)^2
+\]
+
+\subsection*{3. Moment-Generating Function (MGF) \( M_X(t) \)}
+
+The moment-generating function (MGF) of \( X \) is:
+
+\[
+M_X(t) = \mathbb{E}[e^{tX}]
+\]
+
+Using the law of total expectation:
+
+\[
+M_X(t) = \sum_{i=1}^{K} p_i \cdot \mathbb{E}[e^{tX} \mid Z = i]
+\]
+
+For a Gaussian random variable \( X_i \sim \mathcal{N}(\mu_i, \sigma_i^2) \), the MGF is:
+
+\[
+M_{X_i}(t) = \exp\left(t\mu_i + \frac{1}{2}t^2\sigma_i^2\right)
+\]
+
+Therefore:
+
+\[
+M_X(t) = \sum_{i=1}^{K} p_i \exp\left(t\mu_i + \frac{1}{2}t^2\sigma_i^2\right)
+\]
+
+\section*{Task C}
+
+We are given a random variable \( Z \) which is a weighted sum of \( k \) independent Gaussian random variables:
+\[
+Z = \sum_{i=1}^K p_i X_i
+\]
+where \( X_i \sim \mathcal{N}(\mu_i, \sigma_i^2) \).
+
+\subsection*{1. Expected Value of \( Z \)}
+
+To find the expected value \( \mathbb{E}[Z] \):
+\[
+\mathbb{E}[Z] = \mathbb{E} \left[ \sum_{i=1}^K p_i X_i \right]
+\]
+Using the linearity of expectation:
+\[
+\mathbb{E}[Z] = \sum_{i=1}^K p_i \mathbb{E}[X_i]
+\]
+Since \( X_i \) are Gaussian, \( \mathbb{E}[X_i] = \mu_i \):
+\[
+\mathbb{E}[Z] = \sum_{i=1}^K p_i \mu_i
+\]
+
+\subsection*{2. Variance of \( Z \)}
+
+To find the variance \( \text{Var}(Z) \):
+\[
+\text{Var}(Z) = \text{Var} \left( \sum_{i=1}^K p_i X_i \right)
+\]
+Since \( X_i \) are independent:
+\[
+\text{Var}(Z) = \sum_{i=1}^K p_i^2 \text{Var}(X_i)
+\]
+Given \( \text{Var}(X_i) = \sigma_i^2 \):
+\[
+\text{Var}(Z) = \sum_{i=1}^K p_i^2 \sigma_i^2
+\]
+
+\subsection*{3. PDF of \( Z \)}
+
+Since \( Z \) is a weighted sum of Gaussian variables, \( Z \) is Gaussian(extended version of Cramer's theorem ). The PDF of a Gaussian random variable with mean \( \mu \) and variance \( \sigma^2 \) is:
+\[
+f_Z(u) = \frac{1}{\sqrt{2 \pi \text{Var}(Z)}} \exp \left( -\frac{(u - \mathbb{E}[Z])^2}{2 \text{Var}(Z)} \right)
+\]
+Substituting the mean and variance:
+\[
+f_Z(u) = \frac{1}{\sqrt{2 \pi \sum_{i=1}^K p_i^2 \sigma_i^2}} \exp \left( -\frac{(u - \sum_{i=1}^K p_i \mu_i)^2}{2 \sum_{i=1}^K p_i^2 \sigma_i^2} \right)
+\]
+
+\subsection*{4. MGF of \( Z \)}
+
+The Moment Generating Function (MGF) of a Gaussian random variable \( X_i \) with mean \( \mu_i \) and variance \( \sigma_i^2 \) is:
+\[
+M_{X_i}(t) = \exp \left( \mu_i t + \frac{1}{2} \sigma_i^2 t^2 \right)
+\]
+For \( Z = \sum_{i=1}^K p_i X_i \):
+\[
+M_Z(t) = \mathbb{E} \left[ \exp(tZ) \right] = \mathbb{E} \left[ \exp \left( t \sum_{i=1}^K p_i X_i \right) \right]
+\]
+Since \( X_i \) are independent:
+\[
+M_Z(t) = \prod_{i=1}^K \mathbb{E} \left[ \exp \left( t p_i X_i \right) \right]
+\]
+\[
+M_Z(t) = \prod_{i=1}^K \exp \left( p_i \mu_i t + \frac{1}{2} (p_i^2 \sigma_i^2) t^2 \right)
+\]
+\[
+M_Z(t) = \exp \left( \sum_{i=1}^K p_i \mu_i t + \frac{1}{2} \sum_{i=1}^K p_i^2 \sigma_i^2 t^2 \right)
+\]
+
+\subsection*{5. Conclusion}
+
+% \textbf{Conclusion:}
+\begin{itemize}
+    \item \( Z \) is Gaussian with mean \( \sum_{i=1}^K p_i \mu_i \) and variance \( \sum_{i=1}^K p_i^2 \sigma_i^2 \).
+    \item \( X \), being a Gaussian Mixture Model, is generally not Gaussian unless it degenerates into a single Gaussian component.
+    \item \( Z \) and \( X \) do not necessarily have the same distributional properties.
+\end{itemize}
+
+\subsection*{6. Distribution of \( Z \)}
+
+% \textbf{Distribution of \( Z \)}: 
+
+Since \( Z \) is a weighted sum of Gaussian random variables, it follows a Gaussian distribution. Specifically, \( Z \) is distributed as:
+\[
+Z \sim \mathcal{N} \left( \sum_{i=1}^K p_i \mu_i, \sum_{i=1}^K p_i^2 \sigma_i^2 \right)
+\]
+
+\section*{Task D(B):}
+\(X\) and \(Y\) are discrete random variables taking only finitely many values. \\
+let \(X\) and \(Y\) have same distribution(same PMF), then
+
+\[
+M_X(t) = E[\exp(tX)]
+\]
+
+\[
+M_X(t) = E[\exp(tY)]
+\]
+
+\[
+M_X(t) = M_Y(t)
+\]
+
+their MGF are equal. \\
+This shows that the PMF uniquely determines the MGF of a discrete random variable.
+
+let MGF(X) and MGF(Y) are equal, then
+\\
+\(R_x\) and \(R_y\) denote the supports of X and Y. \(P_X(x)\) and \(P_Y(y)\) denote the PMF of X and Y. Denote by A the union of the two supports:
+
+\[
+A = R_x \cup R_Y
+\]
+
+and by \(a_1\),\dots,\(a_n\) the elements of A. The MGF of X can be written as \\
+
+\[
+M_x(t) = E[\exp(tX)]
+\]
+\[
+M_x(t) = \sum_{x \in R_x} \exp(tx)P_X(x)  
+\]
+\[
+M_x(t) = \sum_{i = 1}^n \exp(ta_i)P_X(a_i) \space \space (\text{because} P_X(a_i)= 0 \text{if} a_i \notin R_X)
+\]
+
+By the same token, the MGF of Y can be written as: \\
+\[
+M_Y(t) = \sum_{i = 1}^n \exp(ta_i)P_Y(a_i) \space \space 
+\] \\
+
+if X and Y have the same MGF, then for any t belonging to a closed neighborhood of zero. \\
+
+\[ M_X(t) = M_Y(t)\]
+
+and \\
+
+\[
+\sum_{i = 1}^n \exp(ta_i)P_X(a_i) = \sum_{i = 1}^n \exp(ta_i)P_Y(a_i)
+\]
+
+Rearranging terms, we obtain \\
+\[
+\sum_{i = 1}^n \exp(ta_i)[P_X(a_i)-P_Y(a_i)] = 0
+\]
+
+This can be true for any t belonging to a closed neighborhood of zero only if \\
+
+\[
+P_x(a_i)-P_Y(a_i) =0
+\]
+
+for every i. it follows that the probability mass function of X and Y are equal. As a consequence, also their distribution functions are equal. \\
+
+This shows that the MGF uniquely determines the distribution of a discrete random variable.
+
+\subsection*{logical explanation:}
+
+The reason this is true is because the MGF of a random variable encapsulates all of its moments (mean, variance, etc.). If two random variables have the same MGF, they must have the same moments, and hence, the same distribution. This is why the MGF uniquely determines the PDF (or PMF), and vice versa.
+
+
+
+
+\end{document}
