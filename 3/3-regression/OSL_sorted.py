@@ -4,25 +4,25 @@ import pandas as pd
 import pickle
 
 
-def X_matrix(X: np.ndarray, N) -> np.ndarray:
-    '''
+def x_matrix(x: np.ndarray, n) -> np.ndarray:
+    """
     Create Polynomial Features
-    '''
-    n_samples = X.shape[0]
-    X_temp = np.ones((n_samples, 1))
+    """
+    n_samples = x.shape[0]
+    x_temp = np.ones((n_samples, 1))
     
-    for deg in range(1, N + 1):
-        X_temp = np.hstack((X_temp, X ** deg))
+    for deg in range(1, n + 1):
+        x_temp = np.hstack((x_temp, x ** deg))
     
-    return X_temp
+    return x_temp
 
 
-def estimate_B(X, Y):
-    '''
+def estimate_b(x, y):
+    """
     Estimate Parameters Using OLS
-    '''
-    B = np.linalg.inv(X.T @ X) @ (X.T @ Y)
-    return B
+    """
+    b = np.linalg.inv(x.T @ x) @ (x.T @ y)
+    return b
 
 
 # Load data
@@ -38,10 +38,10 @@ y_sorted = train_y[sorted_indices]
 
 # Make Input Matrix
 degree = 21
-X_train = X_matrix(x_sorted.reshape(-1, 1), degree)
+X_train = x_matrix(x_sorted.reshape(-1, 1), degree)
 
 # Estimate Parameters For Training Data
-B = estimate_B(X_train, y_sorted)
+B = estimate_b(X_train, y_sorted)
 
 # Predict Outputs
 pred_y_train = X_train @ B
@@ -60,7 +60,7 @@ test_x = test_data[['x']].to_numpy()
 test_id = test_data['id'].to_numpy()
 
 # Create polynomial features for test data
-X_test = X_matrix(test_x, degree)
+X_test = x_matrix(test_x, degree)
 
 # Make predictions on the test set
 test_predictions = X_test @ B
@@ -70,11 +70,14 @@ test_output = pd.DataFrame({'id': test_id, 'x': test_x.flatten(), 'y': test_pred
 test_output.to_csv('test_predictions.csv', index=False)
 
 # Plotting
-plt.scatter(x_sorted, y_sorted, color='red', label='Training Data')
-plt.plot(x_sorted, pred_y_train, color='blue', label='Polynomial Fit (Train)')
-plt.title('Polynomial Regression Fit')
-plt.xlabel('X-axis')
-plt.ylabel('Y-axis')
+plt.figure(dpi=300)
+plt.rcParams['font.family'] = 'Cambria'
+plt.scatter(x_sorted, y_sorted, color='salmon', label='Training Data', edgecolor='black', s=20)
+plt.plot(x_sorted, pred_y_train, color='blue', label='Polynomial Fit (Train)', linewidth=2)
+plt.title('Polynomial Regression Fit', fontsize=14, fontweight='bold')
+plt.xlabel('X-axis', fontsize=12)
+plt.ylabel('Y-axis', fontsize=12)
 plt.legend()
-plt.grid()
+plt.grid(True, linestyle='--', alpha=0.7)
+# plt.tight_layout()
 plt.show()
