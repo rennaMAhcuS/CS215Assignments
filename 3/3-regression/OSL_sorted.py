@@ -4,25 +4,25 @@ import pandas as pd
 import pickle
 
 
-def x_matrix(x: np.ndarray, n) -> np.ndarray:
-    """
+def X_matrix(X: np.ndarray, N) -> np.ndarray:
+    '''
     Create Polynomial Features
-    """
-    n_samples = x.shape[0]
-    x_temp = np.ones((n_samples, 1))
+    '''
+    n_samples = X.shape[0]
+    X_temp = np.ones((n_samples, 1))
     
-    for deg in range(1, n + 1):
-        x_temp = np.hstack((x_temp, x ** deg))
+    for deg in range(1, N + 1):
+        X_temp = np.hstack((X_temp, X ** deg))
     
-    return x_temp
+    return X_temp
 
 
-def estimate_b(x, y):
-    """
+def estimate_B(X, Y):
+    '''
     Estimate Parameters Using OLS
-    """
-    b = np.linalg.inv(x.T @ x) @ (x.T @ y)
-    return b
+    '''
+    B = np.linalg.inv(X.T @ X) @ (X.T @ Y)
+    return B
 
 
 # Load data
@@ -38,10 +38,10 @@ y_sorted = train_y[sorted_indices]
 
 # Make Input Matrix
 degree = 21
-X_train = x_matrix(x_sorted.reshape(-1, 1), degree)
+X_train = X_matrix(x_sorted.reshape(-1, 1), degree)
 
 # Estimate Parameters For Training Data
-B = estimate_b(X_train, y_sorted)
+B = estimate_B(X_train, y_sorted)
 
 # Predict Outputs
 pred_y_train = X_train @ B
@@ -51,7 +51,7 @@ ssr_train = np.sum((pred_y_train - y_sorted) ** 2)
 print(f'SSR: {ssr_train}')
 
 # Save the parameters to a file
-with open('weights.pkl', 'wb') as f:
+with open('3_weights.pkl', 'wb') as f:
     pickle.dump(B, f)
 
 # Load test data
@@ -60,7 +60,7 @@ test_x = test_data[['x']].to_numpy()
 test_id = test_data['id'].to_numpy()
 
 # Create polynomial features for test data
-X_test = x_matrix(test_x, degree)
+X_test = X_matrix(test_x, degree)
 
 # Make predictions on the test set
 test_predictions = X_test @ B
@@ -70,14 +70,11 @@ test_output = pd.DataFrame({'id': test_id, 'x': test_x.flatten(), 'y': test_pred
 test_output.to_csv('test_predictions.csv', index=False)
 
 # Plotting
-plt.figure(dpi=300)
-plt.rcParams['font.family'] = 'Cambria'
-plt.scatter(x_sorted, y_sorted, color='salmon', label='Training Data', edgecolor='black', s=20)
-plt.plot(x_sorted, pred_y_train, color='blue', label='Polynomial Fit (Train)', linewidth=2)
-plt.title('Polynomial Regression Fit', fontsize=14, fontweight='bold')
-plt.xlabel('X-axis', fontsize=12)
-plt.ylabel('Y-axis', fontsize=12)
+plt.scatter(x_sorted, y_sorted, color='red', label='Training Data')
+plt.plot(x_sorted, pred_y_train, color='blue', label='Polynomial Fit (Train)')
+plt.title('Polynomial Regression Fit')
+plt.xlabel('X-axis')
+plt.ylabel('Y-axis')
 plt.legend()
-plt.grid(True, linestyle='--', alpha=0.7)
-# plt.tight_layout()
+plt.grid()
 plt.show()

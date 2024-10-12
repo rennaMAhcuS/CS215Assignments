@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
+import pickle
 
 # Create polynomial features
 def X_matrix(X, N):
@@ -49,12 +49,12 @@ dev_r2 = []
 for degree in degrees:
     X_train = X_matrix(train_x.reshape(-1, 1), degree)
     B = estimate_B(X_train, train_y)
-
+    
     # Predictions for training and dev sets
     pred_train = X_train @ B
     X_dev = X_matrix(dev_x.reshape(-1, 1), degree)
     pred_dev = X_dev @ B
-
+    
     # Calculate SSR
     train_ssr.append(np.sum((pred_train - train_y) ** 2))
     dev_ssr.append(np.sum((pred_dev - dev_y) ** 2))
@@ -64,11 +64,11 @@ for degree in degrees:
     SSy_dev = np.sum((dev_y - np.mean(dev_y)) ** 2)
 
     # Calculate R^2
-    train_r2.append(1 - (np.sum((pred_train - train_y) ** 2) / SSy_train))
-    dev_r2.append(1 - (np.sum((pred_dev - dev_y) ** 2) / SSy_dev))
+    train_r2.append( 1 - (np.sum((pred_train - train_y) ** 2) / SSy_train))
+    dev_r2.append( 1 - (np.sum((pred_dev - dev_y) ** 2) / SSy_dev))
 
 # Plotting Training and Dev SSR
-print(train_ssr, dev_ssr)
+print(train_ssr,dev_ssr)
 diff = np.abs(np.array(train_ssr) - np.array(dev_ssr))
 print(diff)
 
@@ -77,9 +77,9 @@ plt.title('Difference between train_SSr & dev_SSr')
 plt.show(block=False)
 
 plt.figure(figsize=(18, 6))
-plt.subplot(1, 2, 1)
-plt.plot(degrees, train_ssr, label='Training Error', marker='o', color='blue')
-plt.plot(degrees, dev_ssr, label='Development Error', marker='o', color='red')
+plt.subplot(1,2,1)
+plt.plot(degrees, train_ssr, label = 'Training Error', marker = 'o', color = 'blue')
+plt.plot(degrees, dev_ssr, label = 'Development Error', marker = 'o', color = 'red')
 
 plt.xlabel('Polynomial Degree')
 plt.ylabel('Error')
@@ -88,9 +88,9 @@ plt.legend()
 plt.grid(True)
 plt.yscale('log')
 
-plt.subplot(1, 2, 2)
-plt.plot(degrees, train_r2, label='train_R^2', marker='o', color='blue')
-plt.plot(degrees, dev_r2, label='dev_R^2', marker='o', color='red')
+plt.subplot(1,2,2)
+plt.plot(degrees, train_r2, label = 'train_R^2', marker = 'o', color = 'blue')
+plt.plot(degrees, dev_r2, label = 'dev_R^2', marker = 'o', color = 'red')
 plt.xlabel('Polynomial Degree')
 plt.ylabel('R^2')
 plt.title('R^2 for Degrees')
