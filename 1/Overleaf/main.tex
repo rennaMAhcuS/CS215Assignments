@@ -1,0 +1,775 @@
+% Preamble
+% {
+\documentclass{article}
+\usepackage{graphicx, float}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=red,
+    urlcolor=magenta
+}
+
+% For color
+\usepackage{xcolor}
+\definecolor{blue}{RGB}{40, 80, 160}
+\let\oldequation\equation
+\renewcommand{\equation}{\color{blue}\oldequation}
+\let\oldendequation\endequation
+\renewcommand{\endequation}{\oldendequation\color{black}}
+\let\oldalign\align
+\renewcommand{\align}{\color{blue}\oldalign}
+\let\oldendalign\endalign
+\renewcommand{\endalign}{\oldendalign\color{black}}
+\everydisplay{\color{blue}}
+
+% Paragraph indentation
+\setlength{\parindent}{0pt}
+
+% Page dimensions and border setup
+\usepackage{geometry}
+\geometry{
+    a4paper,
+    left=20mm,
+    right=20mm,
+    top=25mm,
+    bottom=25mm
+}
+
+% Font setup
+\usepackage{fontspec}
+\usepackage{mathpazo}
+\setmainfont[
+    Path = fonts/,
+    UprightFont = *-Regular,
+    BoldFont = *-Bold,
+    ItalicFont = *-Italic,
+    BoldItalicFont = *-BoldItalic
+]{Cambria}
+\setmonofont[
+    Path = fonts/,
+    UprightFont = *,
+    BoldFont = *,
+    ItalicFont = *,
+    BoldItalicFont = *,
+    Scale=MatchLowercase
+]{Monaco}
+
+% Header and Footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+% Header
+\renewcommand{\headrulewidth}{0.5pt}
+    \fancyhead[L]{\textbf{CS215 Assignment 1}}
+    \fancyhead[C]{}
+    \fancyhead[R]{\textbf{\thepage}}
+% Footer
+\renewcommand{\footrulewidth}{1pt}
+    \fancyfoot[L]{\textbf{Abhineet Majety}}
+    \fancyfoot[C]{\textbf{Mohana Evuri}}
+    \fancyfoot[R]{\textbf{Saksham Jain}}
+% Title page
+\fancypagestyle{plain}{
+    \fancyhf{}
+    % Header
+    \renewcommand{\headrulewidth}{0.5pt}
+        \fancyhead[L]{\textbf{CS215 Assignment 1}}
+        \fancyhead[C]{}
+        \fancyhead[R]{\textbf{\thepage}}
+    % Footer
+    \renewcommand{\footrulewidth}{1pt}
+        \fancyfoot[L]{\textbf{Abhineet Majety}}
+        \fancyfoot[C]{\textbf{Mohana Evuri}}
+        \fancyfoot[R]{\textbf{Saksham Jain}}
+}
+
+% Custom commands
+\newcommand*{\Comb}[2]{{}^{#1}C_{#2}}
+\newcommand*{\Perm}[2]{{}^{#1}P_{#2}}
+
+% Callout Box
+\usepackage{tcolorbox}
+
+% Code
+\usepackage{listings}
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color[HTML]{AA0C91},
+    numbers=left,
+    numberstyle=\color{lightgray},
+    stepnumber=1,
+    numbersep=5pt,
+    backgroundcolor=\color{white},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    frame=single,
+    tabsize=4,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=true
+}
+
+% }
+
+\begin{document}
+\setcounter{page}{2}
+\section{Let's Gamble}
+
+\begin{tcolorbox}
+    There are two friends playing a dice-roll game. Friend A has $(n+ 1)$ fair dice and Friend B has $n$
+fair dice (a fair die has equal probability of every face). On every roll, a win is achieved if we get a
+prime number on the top. What is the probability that A will have more wins than B if both roll
+all of their dice? 
+\end{tcolorbox}
+
+Each roll's number on top for a win is $\{2, 3, 5\}$. Since the dice are fair, the probability of a win is $\dfrac{3}{6}=\dfrac{1}{2}$. Each roll is independent.
+
+First, consider the first $n$ rolls. Let $X_n$ be the number of wins with $X$ after $n$ rolls. Then, by symmetry, we have
+\begin{equation}
+    P(A_n>B_n) = P(B_n>A_n)
+\end{equation}
+
+Now, we have
+
+\begin{equation}
+\begin{aligned}
+    P(A_n=B_n) &= \sum_{i=1}^{n}P(A_n=B_n=i) \\
+    &= \sum_{i=1}^{n}P(A_n=i)P(B_n=i) \\
+    &= \sum_{i=1}^{n} \Comb{n}{i}\left(\dfrac{1}{2}\right)^n\cdot \Comb{n}{i}\left(\dfrac{1}{2}\right)^n \\
+    &= \sum_{i=1}^{n} \Comb{n}{i}^2\left(\dfrac{1}{2}\right)^{2n} \\
+    &= \left(\dfrac{1}{2}\right)^{2n}\cdot \Comb{2n}{n}
+\end{aligned}
+\end{equation}
+
+Since the three events are mutually exclusive, we have
+\begin{equation}
+    P(A_n>B_n) + P(A_n<B_n) + P(A_n=B_n) = 1
+\end{equation}
+
+From (1), (2) and (3), we have
+\begin{equation}
+    P(A_n>B_n) = \dfrac{1}{2} - (\dfrac{1}{2})^{2n+1}\cdot \Comb{2n}{n}
+\end{equation}
+
+Now, for $(n+1)$ rolls, using (2) and (4),
+
+\begin{equation}
+\begin{aligned}
+    P(A_{n+1}>B_n) &= P(A_n>B_n) + P(A_n=B_n \cap A_{n+1}=A_n+1) \\
+    &= \dfrac{1}{2} - \left(\dfrac{1}{2}\right)^{2n+1}\cdot \Comb{2n}{n} + \left(\dfrac{1}{2}\right)\cdot \left(\dfrac{1}{2}\right)^{2n}\cdot \Comb{2n}{n} \\
+    &= \dfrac{1}{2}
+\end{aligned}
+\end{equation}
+
+Hence, the probability of A having more wins than B at the end is $\dfrac{1}{2}$.
+
+\setcounter{equation}{0}
+
+\section{Two Trading Teams}
+
+\begin{tcolorbox}
+    You are playing a trading game against two teams A and B (will happen in reality soon). The
+    game is played in the form of a three-set series with A and B alternately. Also, Team B is better at
+    trading than Team A. To encourage your trading career, the exchange (an organization responsible
+    for managing the trades) gives you two options A-B-A (which means you play a game with Team A, then Team B and at last Team A again) or B-A-B. You will win if you win two sets in a row.
+    Which of the two options should you choose? Justify your choice with proper calculations.
+\end{tcolorbox}
+
+Let $p_A$ and $p_B$ be the probabilities of a win against $A$ and $B$, respectively. Since B plays better than A, we have $p_A > p_B$. (Assuming that each set is independent of the others)
+
+\medskip\textbf{Case-1}: The option A-B-A is chosen. I can win if
+\begin{enumerate}
+    \item I win the first two sets:
+    \begin{equation*}
+        P(win_1) = p_A\cdot p_B
+    \end{equation*}
+    
+    \item I lose the 1st set, win the 2nd and 3rd set:
+    \begin{equation*}
+        P(win_2) = (1-p_A)\cdot p_B\cdot p_A
+    \end{equation*}
+\end{enumerate}
+
+Hence, the probability is
+
+\begin{equation}
+\begin{aligned}
+    P(win_{ABA}) &= P(win_1) + P(win_2) \\
+    &= p_A p_B + (1 - p_A) p_B p_A \\
+    &= p_A p_B (2 - p_A)
+\end{aligned}
+\end{equation}
+
+\medskip\textbf{Case-2}: The option B-A-B is chosen. I can win if
+\begin{enumerate}
+    \item I win the first two sets:
+    \begin{equation*}
+        P(win_1) = p_B\cdot p_A
+    \end{equation*}
+    
+    \item I lose the 1st set, win the 2nd and 3rd set:
+    \begin{equation*}
+        P(win_2) = (1-p_B)\cdot p_A\cdot p_B
+    \end{equation*}
+    
+\end{enumerate}
+
+Hence, the probability is
+
+\begin{equation}
+\begin{aligned}
+    P(win_{BAB}) &= P(win_1) + P(win_2) \\
+    &= p_B p_A + (1 - p_B) p_A p_B \\
+    &= p_A p_B (2 - p_B)
+\end{aligned}
+\end{equation}
+
+Since $p_B < p_A$, it follows that $P(win_{BAB}) > P(win_{ABA})$. Hence, I would choose the option B-A-B.
+
+\setcounter{equation}{0}
+
+\section{Random Variables}
+\subsection*{3.1}
+\begin{tcolorbox}
+    Let $Q_1$, $Q_2$ be non-negative random variables. Let $P(Q_1 < q_1) \ge 1-p_1$ and $P(Q_2 < q_2) \ge
+    1-p_2$, where $q_1,q_2$ are non-negative. Then show that $P(Q_1Q_2 <q_1q_2) \ge 1-(p_1 + p_2)$
+\end{tcolorbox}
+Since $Q_1$ and $Q_2$ are non-negative, we have
+\begin{equation}
+    P(Q_1Q_2<q_1q_2) \ge P(Q_1<q_1 \cap Q_2<q_2)
+\end{equation}
+
+Define the pairwise mutually exclusive events $E_1, E_2, E_3$ as
+
+\begin{equation}
+\begin{aligned}
+    E_1 &:= \{Q_1 < q_1 \cap Q_2 < q_2\} \\
+    E_2 &:= \{Q_1 < q_1 \cap Q_2 \ge q_2\} \\
+    E_3 &:= \{Q_1 \ge q_1 \cap Q_2 < q_2\}
+\end{aligned}
+\end{equation}
+
+Then, we have
+
+\begin{equation}
+\begin{aligned}
+    P(E_1) + P(E_2)  &= 1-p_1 \\
+    P(E_1) + P(E_3)  &= 1-p_2 \\
+    P(E_1) + P(E_2) + P(E_3) &\le 1
+\end{aligned}
+\end{equation}
+
+Using the equations in (3), we have
+
+\begin{equation}
+\begin{aligned}
+    2P(E_1) + P(E_2) + P(E_3) &= 2 - p_1 - p_2 \\
+    \implies 2 - p_1 - p_2 &\le 1 + P(E_1) \\
+    \implies P(E_1) &\ge 1 - (p_1 + p_2)
+\end{aligned}
+\end{equation}
+
+Finally, using (1) and (4), we have
+\begin{equation}
+    P(Q_1Q_2<q_1q_2) \ge 1-(p_1+p_2)
+\end{equation}
+
+\setcounter{equation}{0}
+
+\subsection*{3.2}
+\begin{tcolorbox}
+    Given $n$ distinct values $\{x_i\}^n_{i=1}$ with mean $\mu$ and standard deviation $\sigma$, prove
+    that for all $i$, we have $|x_i - \mu| \le \sigma \sqrt{n - 1}$. How does this inequality compare
+    with Chebyshev’s inequality as $n$ increases? (give an informal answer) 
+\end{tcolorbox}
+
+Consider the definition of $\sigma$,
+
+\begin{equation}
+\begin{aligned}
+    \sigma &= \sqrt{\dfrac{\sum_{i=1}^{n}(x_i - \mu)^2}{n - 1}} \\
+    \implies \sigma \sqrt{n - 1} &= \sqrt{\sum_{i=1}^{n}(x_i - \mu)^2}
+\end{aligned}
+\end{equation}
+
+Now, for all $1\le i\le n$, we have
+\begin{equation}
+    |x_1-\mu|\le \sqrtsign{\sum_{i=1}^{n}(x_i-\mu)^2}
+\end{equation}
+
+Hence, from (1), we have
+\begin{equation}
+    |x_i-\mu|\le \sigma\sqrtsign{n-1}
+\end{equation}
+for all $1\le i\le n$.
+
+As $n$ increases, this inequality gives significantly less information about the distribution of $x_i$, but it provides an upper bound on the value $x_i$ can take. On the other hand, Chebyshev's inequality gives a bound on the number of $x_i$, which has a high deviation from the mean.
+
+\setcounter{equation}{0}
+
+\section{Staff Assistant}
+\begin{tcolorbox}
+    You need a new staff assistant, and you have $n$ people to interview. You want to hire the best
+    candidate for the position. When you interview a candidate, you can give them a score, with the
+    highest score being the best and no ties being possible.
+    \\[5pt]
+    You interview the candidates one by one. Because of your company’s hiring practices, after you
+    interview the $k^{th}$ candidate, you either offer the candidate the job before the next interview
+    or you forever lose the chance to hire that candidate. We suppose the candidates are interviewed in
+    a random order, chosen uniformly at random from all $n!$ possible orderings.
+    \\[5pt]    
+    We consider the following strategy. First, interview $m$ candidates but reject them all: these
+    candidates give you an idea of how strong the field is. After the $m^{th}$ candidate. hire the first
+    candidate you interview who is better than all of the previous candidates you have interviewed.
+\end{tcolorbox}
+\subsection*{(a)}
+
+\begin{tcolorbox}
+    Let $E$ be the event that we hire the best assistant, and let $E_i$; be the event that $i^{th}$
+    candidate is the best and we hire him. Determine $Pr(E_i)$, and show that
+
+    \begin{equation*}
+        Pr(E) = \dfrac{m}{n} \sum_{j=m+1}^n \dfrac{1}{j-1}
+    \end{equation*}
+\end{tcolorbox}
+
+Let $i$ be the position of the best assistant.
+
+\textbf{When} $i \le m$: $\Pr(E_i)=0$ because the first $m$ candidates are rejected. 
+
+\textbf{When} $i \ge m$: Consider a collection $C$ of orderings in which the candidates appearing before $i$ and those appearing after $i$ are the same. The $i$th candidate (the best assistant) will be selected if the candidate with the highest score among the first $i-1$ candidates is among the first $m$ candidates. If that candidate were not in the first $m$ candidates, he would be selected before the $i$th candidate. If he were in the first $m$ candidates, the first candidate better than that candidate is the $i$th candidate. Hence, the best assistant would be selected in this case.
+
+The probability of the best assistant being selected in this collection is
+\begin{equation}
+    \Pr(E_i | C) = \dfrac{m}{i-1}.
+\end{equation}
+
+
+Since the ordering is uniformly random, the same probability of $E_i$ holds for any such collection of orderings. Here, $\cup C$ is the set of orderings where the $i$th candidate is the best assistant. All the collections $C$ as defined above are pairwise mutually exclusive. Hence, by total probability theorem, $\forall i>m$,
+\begin{equation}
+    \begin{aligned}
+        \Pr(E_i) &= \sum\dfrac{m}{i-1}\cdot \Pr(C) \\
+        &= \dfrac{m}{i-1}\cdot\sum \Pr(C) \\
+        &= \dfrac{m}{i-1}.
+    \end{aligned}
+\end{equation}
+
+Let $\Pr(i)$ be the probability of the best assistant being at position $i$. Then,
+\begin{equation}
+    \begin{aligned}
+        \Pr(E) &= \sum_{i=1}^{n}\Pr(E_i)\cdot \Pr(i) \\
+        &= {\sum_{i=1}^{m}\Pr(E_i)\Pr(i)} + {\sum_{i=m+1}^{n}\Pr(E_i)\Pr(i)} \\
+        &= \sum_{i=m+1}^{n}\dfrac{m}{i-1}\cdot \dfrac{1}{n} \\
+        &= \dfrac{m}{n}\sum_{j=m+1}^{n}\dfrac{1}{j-1}.
+    \end{aligned}
+\end{equation}
+
+\subsection*{(b)}
+
+\begin{tcolorbox}
+    Bound $\sum_{j=m+1}^n \frac{1}{j-1}$ to obtain:
+    \begin{equation*}
+        \dfrac{m}{n}(\ln(n) - \ln(m)) \le Pr(E) \le \dfrac{m}{n}(\ln(n - 1) - \ln(m - 1))
+    \end{equation*}
+\end{tcolorbox}
+
+We know that $\ln(1+x)<x$ for $x > 0$ and $\ln(1+x)>x$ for $x < 0$. Hence, for $j\ge 2$,
+\begin{equation}
+    \begin{aligned}
+        &\ln\left(1+\dfrac{1}{j-1}\right) \le \dfrac{1}{j-1}\, \text{and}\, -\dfrac{1}{j-1} \ge \ln\left(1-\dfrac{1}{j-1}\right) \\
+        \implies & \ln\left(\dfrac{j}{j-1}\right) \le \dfrac{1}{j-1} \le \ln\left(\dfrac{1}{1-\dfrac{1}{j-1}}\right) \\
+        \implies & \ln\left(\dfrac{j}{j-1}\right) \le \dfrac{1}{j-1} \le \ln\left(\dfrac{j-1}{j-2}\right).
+    \end{aligned}
+\end{equation}
+
+Hence, from (3) and (4),
+\begin{equation}
+    \begin{aligned}
+        & \dfrac{m}{n}\sum_{j=m+1}^{n}\ln\left(\dfrac{j}{j-1}\right) \le \Pr(E) \le \dfrac{m}{n}\sum_{j=m+1}^{n}\ln\left(\dfrac{j-1}{j-2}\right) \\
+        \implies & \dfrac{m}{n}(\ln(n)-\ln(m)) \le \Pr(E) \le \dfrac{m}{n}(\ln(n-1)-\ln(m-1)).
+    \end{aligned}
+\end{equation}
+
+\subsection*{(c)}
+
+\begin{tcolorbox}
+    Show that $\frac{m}{n}(\ln(n) - \ln(m))$ is maximized when $m = \frac{n}{e}$, and explain why this means $Pr(E) \ge \frac{1}{e}$ for this choice of $m$.
+\end{tcolorbox}
+
+Let $k=\dfrac{m}{n}$. Then
+\begin{equation}
+    \begin{aligned}
+    \dfrac{m}{n}(\ln(n)-\ln(m)) &= k\ln(\dfrac{1}{k}) \\
+    &= -k\ln(k).
+    \end{aligned}
+\end{equation}
+
+Now,
+\begin{equation}
+     \dfrac{d(-k\ln(k))}{dk} = -1-\ln(k)
+\end{equation}
+
+which becomes $0$ at $k=\dfrac{1}{e}$. Also 
+\begin{equation}
+    \begin{aligned}
+    \dfrac{d^2(-k\ln(k))}{dk^2} &= -\dfrac{1}{k} \\
+    \left.\dfrac{d^2(-k\ln(k))}{dk^2}\right|_{k=\dfrac{1}{e}} &= -e < 0.
+    \end{aligned}
+\end{equation}
+
+Hence, the function is maximized when $k=\dfrac{1}{e}$, i.e., when $m = \dfrac{n}{e}$. For this choice of $m$, using the lower bound from equation (5),
+
+\begin{equation}
+    \Pr(E) \ge \dfrac{m}{n}(\ln(n)-\ln(m)) = \dfrac{1}{e}.
+\end{equation}
+
+
+\setcounter{equation}{0}
+
+\section{Free Trade}
+
+\begin{tcolorbox}
+    Imagine an infinitely long line of traders waiting outside a brokerage firm to place their trades.
+    Each trader is assigned an ID number from 1 to 200 (both inclusive, obviously these IDs are not
+    unique). The firm’s director announces a special offer: the first trader in the queue whose ID
+    number matches the ID of any trader who has already placed a trade will receive a free trade (i.e.,
+    a trade without any margins). You have the option to choose your position in this queue. However,
+    you don’t know the ID numbers of the traders ahead of you or behind you. Your goal is to maximize
+    your chances of being the first trader whose ID matches someone who has already placed a trade.
+    Given this situation, what position in the queue should you choose to maximize your chances of
+    receiving the free trade?
+\end{tcolorbox}
+
+Let $P(n)$ be the probability of the first \textit{free trade} to occur at the $n$th position. 
+
+For the first trade to occur at the $n$th position, the ID number of the first $(n-1)$ traders should be distinct, and the ID of the $n$th trader should be one of the first $n-1$ numbers. The total number of possible values of the first $n$ ID numbers is $200^n$. Hence,
+
+\begin{equation}
+\begin{aligned}
+    P(n) &= \dfrac{\Perm{200}{n-1} \cdot (n-1)}{200^n} \\
+         &= \dfrac{200! \cdot (n-1)}{(201-n)! \cdot 200^n}
+\end{aligned}
+\end{equation}
+
+We want to study the behavior of $P(n)$ and find its maxima. We can see that for $n>201$, $P(n)=0$. This is because the first repetition of the number will occur in at most the $201$th digit (by the Pigeonhole principle). Also, $P(1)=0$ because repetition cannot occur in the first position. For $2\le n\le 201$, $P(n)$ is non-zero.
+
+Now, using (1)
+\begin{equation}
+\begin{aligned}
+    \dfrac{P(n-1)}{P(n)} &= \dfrac{(n-2) \cdot (201-n)! \cdot 200^n}{(202-n)! \cdot (n-1) \cdot 200^{n-1}} \\
+    &= \dfrac{200 \cdot (n-2)}{(202-n) \cdot (n-1)}
+\end{aligned}
+\end{equation}
+
+Hence,
+\begin{equation}
+    \dfrac{P(n-1)}{P(n)}-1=\dfrac{n^2-3n-198}{(202-n)\cdot(n-1)}
+\end{equation}
+
+In (3), the denominator is always positive, and the numerator is positive for $n\ge 16$. Hence, the chances of receiving free trade are maximum at the $15$th position.
+
+\setcounter{equation}{0}
+
+\section{Update Functions}
+
+\begin{tcolorbox}
+    Suppose that you have computed the mean, median and standard deviation of a set of n numbers
+    stored in array A where n is very large. Now, you decide to add another number to A. Write a
+    python function to update the previously computed mean, another python function to update the
+    previously computed median, and yet another python function to update the previously computed
+    standard deviation. Note that you are not allowed to simply recompute the mean, median or
+    standard deviation by looping through all the data. You may need to derive formulae for this.
+    Include the formulae and their derivation in your report. Note that your python functions should
+    be of the following form:
+    \\[5pt]
+    \texttt{function newMean = UpdateMean(OldMean, NewDataValue, n, A),}
+    
+    \texttt{function newMedian = UpdateMedian(OldMedian, NewDataValue, n, A),}
+    
+    \texttt{function newStd = UpdateStd(OldMean, OldStd, NewMean, NewDataValue, n, A).}
+    \\[5pt]
+    Also explain, how would you update the histogram of A, if you received a new value to be added to
+    A? (Only explain, no need to write code.) Please specify clearly if you are making any assumptions.
+\end{tcolorbox}
+
+\subsection*{Updating Mean}
+
+Let $\mu_{old}$ be the mean before adding the new number $x_{n+1}$. Then
+\begin{equation}
+    \begin{aligned}
+        \mu_{old} &= \dfrac{\sum_{i=1}^{n}x_i}{n}.
+    \end{aligned}
+\end{equation} 
+
+Let $\mu_{new}$ be the updated mean. Then using (1),
+\begin{equation}
+    \begin{aligned}
+        \mu_{new} &= \dfrac{\sum_{i=1}^{n+1}x_i}{n+1} \\
+        &= \dfrac{(\sum_{i=1}^{n}x_i) + x_{n+1}}{n+1} \\
+        &= \dfrac{\mu_{old}\cdot n + x_{n+1}}{n+1}.
+    \end{aligned}
+\end{equation}
+\\[10pt]
+The final code:
+\begin{lstlisting}
+def UpdateMean(OldMean: float, NewDataValue: float, n: int, A: list[float]) -> float:
+    return (OldMean * n + NewDataValue) / (n + 1)
+\end{lstlisting}
+
+\setcounter{equation}{0}
+\subsection*{Updating Median}
+I have assumed that the array $A$ is sorted. If the number of elements in the updated array is even, the function \texttt{UpdateMedian} outputs the \textbf{average} of the two middle numbers.
+To update the median, we need to know the position of the new number relative to the old median. Let $M_{old}$ and $M_{new}$ be the old and updated medians, respectively. Let $x_{new}$ be the number added.
+
+If $n$ is odd, i.e., the updated array has an even number of elements, then,
+\begin{equation}
+    M_{new}=\begin{cases}
+        \dfrac{x_{\frac{n+1}{2}}+x_{\frac{n+3}{2}}}{2} & x_{new} \ge x_{\frac{n+3}{2}} \\
+        \dfrac{x_{\frac{n+1}{2}}+x_{new}}{2} & x_{\frac{n+3}{2}} > x_{new} > x_{\frac{n-1}{2}} \\
+        \dfrac{x_{\frac{n+1}{2}}+x_{\frac{n-1}{2}}}{2} & x_{\frac{n+3}{2}} \ge x_{new}.
+    \end{cases}
+\end{equation}
+
+If $n$ is even,
+\begin{equation}
+    M_{new}=\begin{cases}
+        x_{\frac{n}{2}+1} & x_{new} \ge x_{\frac{n}{2}+1} \\
+        x_{new} & x_{\frac{n}{2}+1} > x_{new} > x_{\frac{n}{2}} \\
+        x_{\frac{n}{2}} & x_{\frac{n}{2}} \ge x_{new}.
+    \end{cases}
+\end{equation}
+\\[10pt]
+The final code:
+\begin{lstlisting}
+def UpdateMedian(OldMedian: float, NewDataValue: float, n: int, A: list[float]) -> float:
+    if n % 2 == 0:
+        if NewDataValue >= A[n // 2]:
+            return A[n // 2]
+        elif NewDataValue <= A[n // 2 - 1]:
+            return A[n // 2 - 1]
+        else:
+            return NewDataValue
+    else:
+        if NewDataValue >= A[n // 2 + 1]:
+            return (A[n // 2] + A[n // 2 + 1]) / 2
+        elif NewDataValue <= A[n // 2 - 1]:
+            return (A[n // 2 - 1] + A[n // 2]) / 2
+        else:
+            return (A[n // 2] + NewDataValue) / 2
+\end{lstlisting}
+
+\subsection*{Updating Standard Deviation}
+
+Let $\sigma_{old}$ be the standard deviation before adding the new number $x_{n+1}$ to the array $A$. Let $\mu_{old}$ be the old mean. Then, by definition and using (1),
+\begin{equation}
+    \begin{aligned}
+        \sigma_{old} &= \sqrtsign{\dfrac{\sum_{i=1}^{n}(x_i-\mu_{old})^2}{n-1}} \\
+        &= \sqrtsign{\dfrac{\sum_{i=1}^{n}(x_i^2-2\mu_{old}\cdot x_i+\mu_{old}^2)}{n-1}} \\
+        &= \sqrtsign{\dfrac{\sum_{i=1}^{n}x_i^2 -2\mu_{old}\sum_{i=1}^{n}x_i + n\mu_{old}^2}{n-1}} \\
+        &= \sqrtsign{\dfrac{\sum_{i=1}^{n}x_i^2-n\mu_{old}^2}{n-1}} \\
+        \implies \sum_{i=1}^{n}x_i^2 &= (n-1)\sigma_{old}^2 + n\mu_{old}^2.
+    \end{aligned}
+\end{equation}
+
+Let $\sigma_{new}$ be the updated standard deviation. Using the above equation,
+\begin{equation}
+    \begin{aligned}
+        \sigma_{new} &= \sqrtsign{\dfrac{\sum_{i=1}^{n+1}x_i^2-(n+1)\mu_{new}^2}{(n+1)-1}} \\
+        &= \sqrtsign{\dfrac{(n-1)\sigma_{old}^2 + n\mu_{old}^2 + x_{n+1}^2-(n+1)\mu_{new}^2}{n}}.
+    \end{aligned}
+\end{equation}
+\\[10pt]
+The final code:
+\begin{lstlisting}
+import math
+
+def UpdateStd(OldMean: float, OldStd: float, NewMean: float, NewDataValue: float, n: int, A:
+list[float]) -> float:
+    return math.sqrt((n * pow(OldMean, 2) + (n - 1) * pow(OldStd, 2) + pow(NewDataValue, 2) - (n +
+        1) * pow(NewMean, 2)) / n)
+\end{lstlisting}
+
+\subsection*{Updating Histogram}
+
+If the new number lies in one of the bins of the old histogram, then the corresponding height will be increased by one. If it does not lie in any bin, a new bin will be created with only the new number.
+
+\subsection*{Code}
+The \texttt{python} code is in the file \texttt{UpdateFunctions/update\_functions.py}.
+
+
+\setcounter{equation}{0}
+
+\section{Plots}
+
+\begin{tcolorbox}
+    Read about the following plots:
+    \begin{itemize}
+        \item \href{https://www.atlassian.com/data/charts/violin-plot-complete-guide}{Violin Plot}
+        \item \href{https://www.jaspersoft.com/articles/what-is-a-pareto-chart#:~:text=The%20Pareto%20Chart%20is%20a,individual%20values%20in%20percentage%20form.}{Pareto Chart}
+        \item \href{https://www.flerlagetwins.com/2021/12/coxcomb.html#:~:text=Coxcomb%20charts%20are%20a%20sort,larger%20values%20have%20larger%20angles.}{Coxcomb Chart}
+        \item \href{https://en.wikipedia.org/wiki/Waterfall_plot#:~:text=Waterfall%20plots%20are%20often%20used,typically%20spectra%2C%20are%20displayed%20simultaneously.}{Waterfall Plot}
+    \end{itemize}
+    Describe the uses of these plots. Take some sample data and generate one example
+    plot for each of them.
+\end{tcolorbox}
+
+\subsection{Violin Plot}
+
+\textbf{Violin plot} is a powerful data visualization tool that helps see \textbf{numeric data distribution} and is also used to \textbf{compare two data sets}. It combines the features of a \textbf{box plot and a density plot}, giving a detailed view of how the data is distributed throughout the range.
+
+The main feature of a violin plot is its shape, which resembles a violin. The \textbf{width} of the plot at different points tells about the \textbf{number of data points}. Violin plots include a \textbf{marker for the median} (a red horizontal line here). It often contains a box plot that shows the interquartile range (IQR). The top and bottom of the box represent the third quartile (Q3) and first quartile (Q1). The whiskers extend from the edges of the IQR box to show the range of the data. They typically extend up to 1.5 times the IQR from the quartiles.
+
+Violin plot is used to understand detailed distribution characteristics, compare groups, or perform exploratory data analysis, especially with large datasets or when investigating patterns and trends.
+
+\textbf{An example plot}:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{assets/plots/violin_plot.png}
+    \caption{Violin Plot}
+    \label{fig:violin_plot}
+\end{figure}
+
+Violin plots representing two data sets(sepal length and sepal width from the iris dataset) are shown.
+
+A violin plot compares two data sets by visualizing their center, spread, and distribution. It shows that sepal length has a broader distribution with significant variability, possibly multiple peaks, and a wider IQR, indicating more diversity. In contrast, sepal width has a narrower range with less variability, suggesting a more homogeneous data set.
+
+\subsection{Pareto Chart}
+A \textbf{Pareto chart} contains bars and a line graph. The \textbf{bars} represent the \textbf{frequency} or magnitude of individual categories in \textbf{descending order}, whereas the \textbf{line graph} shows the \textbf{cumulative percentage} of these categories.
+
+The key idea is based on the \textbf{Pareto principle}, also known as the \textbf{80/20 rule}, which suggests that \textbf{80\% of effects come from 20\% of causes}.\\[6pt]
+\textbf{\large Uses}
+\begin{enumerate}
+    \item \textbf{Prioritizing Issues}: The Pareto chart highlights the most important among a (typically large) set of factors.
+    \item \textbf{Quality Control}: Pareto charts help identify and prioritize the defects to observe the most significant overall improvement. It often represents the most common sources of defects, the highest occurring type, and the most frequent reasons for customer complaints.
+    \item \textbf{Decision-Making}: Aids make informed decisions by visually distinguishing between the "vital few" and the "trivial many," ensuring efforts are directed towards the most impactful areas.
+\end{enumerate}
+
+\textbf{An example plot}:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{assets/plots/pareto_chart.png}
+    \caption{Pareto Chart}
+    \label{fig:pareto_chart}
+\end{figure}
+
+\subsection{Coxcomb Chart}
+
+\textbf{Coxcomb charts} are \textbf{modified pie charts} where each slice/section represents some category or interval. In a pie chart, \textbf{measures} are \textbf{encoded using angles}, i.e., the larger the value, the larger the angle. Each \textbf{radial bar} extends from the center and represents the \textbf{magnitude of a feature} for a specific category, arranged in a circular format. The length of these bars indicates the proportions of the feature, with \textbf{longer bars} indicating \textbf{higher values}.
+\\[5pt]
+\textbf{An example plot}:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{assets/plots/coxcomb_chart.png}
+    \caption{Coxcomb Chart}
+    \label{fig:coxcomb_chart}
+\end{figure}
+
+In the given example, each chart sector is assigned to a species (Setosa, Virginica, or Versicolor), making comparing features across these categories easy. Features (sepal length, sepal width, petal length, or petal width) are represented using unique colors, which helps understand their distribution and importance. Overlapping bars in multiple colors offer a layered perspective on how each element contributes to the overall data for each category, revealing more elaborate insights into their interactions. The chart is labeled to identify each category, and a legend is provided to explain the color coding for categories. This design allows for precise and engaging visualization of complex data, making analyzing and comparing numerous variables within each category easier.
+
+\subsection{Waterfall Plot}
+
+A \textbf{Waterfall plot} is a 3-D plot in which multiple curves of data, such as spectra and time-series, are displayed simultaneously. The curves are staggered across both the screen and vertically, with the nearer ones closer to us. As a result, we see a series of similar curves appearing side-by-side.
+\\[5pt]
+\textbf{An example plot}:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{assets/plots/waterfall_plot.png}
+    \caption{Waterfall Plot}
+    \label{fig:waterfall_plot}
+\end{figure}
+
+The example shown plots the death rate by age group for the years 2006 to 2016. The data from the years 2006, 2007, 2008, 2015, and 2016 are taken from the Indian government's website. Data for the remaining years has been projected using the known data. The values are hard-coded into the Python file. The plot shows the variation in the death rate trends for different age groups for different years.
+
+\textbf{{Uses}}:
+\begin{enumerate}
+    \item Showing the results of \textbf{spectral density estimation} at successive intervals of time.
+    \item Spectra at different engine speeds when \textbf{testing engines}.
+\end{enumerate}
+
+\subsection*{Code}
+The \texttt{python} code and the output images are in the
+folder \texttt{Plots}.
+
+Code: \texttt{Plots/*.py}
+
+Images: \texttt{Plots/plots}
+
+\setcounter{equation}{0}
+
+\section{Monalisa}
+
+\begin{tcolorbox}
+    Download the image of Monalisa from
+    \href{https://en.wikipedia.org/wiki/File:Mona_Lisa.jpg}{here}. Read the image using
+    matplotlib (\href{https://people.ciirc.cvut.cz/~xmatousm/mfftdv/lab1.html}
+    {example}). Write a piece of python code to shift the image along the X
+    direction by $t_x$ pixels where $t_x$ is an integer ranging from -10 to +10
+    (so, in total you need to do this for 20 values). While doing so, assign a value of
+    0 to unoccupied pixels. For each shift, compute the correlation coefficient between
+    the original image and its shifted version. Make a plot of correlation coefficients
+    across the shift values. Also, generate a normalized histogram for the original
+    image. You might need to refer to section 3.3 from this
+    \href{https://dl.icdst.org/pdfs/files4/01c56e081202b62bd7d3b4f8545775fb.pdf}{book}.
+    You are not allowed to use any inbuilt function for generating the histogram. If
+    you are using any other libraries, then please mention about them in the pdf.
+\end{tcolorbox}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{assets/monalisa/Mona_Lisa.jpg}
+    \caption{The MonaLisa image used (594x899 pixels)}
+    \label{fig:Mona_Lisa}
+\end{figure}
+
+In the first part of the question, we have to compute and plot the correlation
+coefficient between the original image and its shifted versions. Firstly, our code
+reads the Monalisa image using matplotlib; then, we use the slicing method in Python to
+shift the original image along the X direction by $t_x$ pixels ranging from [-10, 10].
+We compute correlation coefficients using the pearsonr function from the scipy library
+of Python and plot the graph for all 21 $t_x$ values. The graph is symmetric about the
+value 0 (No shifting of pixels in the original image).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{assets/monalisa/shift_monalisa.png}
+    \caption{Monalisa with various shifts(tx)}
+    \label{fig:shift_monalisa}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{assets/monalisa/correlation_coefficient.png}
+    \caption{Correlation Coefficient Graph}
+    \label{fig:correlation_coefficient}
+\end{figure}
+
+In the second part of the question, we have to plot a normalized histogram for the
+original image without using any built-in function in Python. Firstly, our code reads
+the original image and converts it to a gray channel from the PIL library. We also
+convert the original into red, blue, and green channels. The normalized histogram for a
+particular channel of the original image is defined as $p(r_k)$ = $\dfrac{n_k}{MN}$ where
+$n_k$ is the no. of pixels in particular of the original image with intensity $r_k$; $M$,
+and $N$ is the number of image rows and columns, respectively. The sum of p($r_k$) for all
+values of k is always 1.
+\\[5pt]
+Here is the graph representing the channel pixel intensities:
+
+\textbf{NOTE}: The x-axis of the graphs in this figure represent \textit{Pixel Value} and 
+the y-axis represents the \textit{$p(r_k)$}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{assets/monalisa/RGB_grayscale_channels_hist.png}
+    \caption{Channel Pixel Intensities Histogram}
+    \label{fig:RGB_grayscale_channels_hist}
+\end{figure}
+
+\subsection*{Code}
+The \texttt{python} code and the outputs are in the
+folder \texttt{Monalisa}.
+
+Code: \texttt{Monalisa/monalisa.py}
+
+\end{document}

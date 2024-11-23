@@ -1,0 +1,417 @@
+\chapter{A Pretty \enquote{Normal} Mixture}
+
+\begin{tcolorbox}[title=]
+    We have been looking at Gaussian (normal) random variables and their
+    manipulation. Now, we shall take many such Gaussians and mix them!
+
+    \vspace{10pt}
+    \begin{mdframed}[backgroundcolor=lightblue, linecolor=blue, linewidth=1.5pt]
+        \textbf{Definition 7 (GMM).}
+        \textit{A Gaussian Mixture Model (GMM) is a random variable defined in
+        terms of $K$ Gaussian random variables and follows the PDF}
+        
+        \begin{equation*}
+            \text{P}[X = x] = \sum_{i = 1}^K p_i P[X_i = x],
+        \end{equation*}
+
+        \textit{where each $X_i \sim \mathcal{N}(\mu_i, \sigma_i^2)$ is a Gaussian
+        random variable with mean $\mu_i$ and variance $\sigma_i^2$ for all $i
+        \in \{1, 2, \cdots, K\}$. Moreover, each $p_i \ge 0$ and $\sum_{i = 1}^K
+        p_i = 1$.}
+    \end{mdframed}
+\end{tcolorbox}
+
+\section*{\colS{$\S$} Task A \hfill \normalfont \large [2]}
+
+\begin{tcolorbox}
+    To sample from a GMM's distribution, we use the following algorithm:
+
+    \vspace{10pt}
+    \begin{enumerate}
+        \item First, one of the Gaussian variables $X_i$ is randomly chosen (or
+        effectively, an index $i$ is chosen) according to the PMF
+        $\{p_1, p_2, \ldots, p_k\}$. That is, $i$ or $X_i$ is chosen in this step
+        with probability $p_i$.
+        \item Next, we sample a value from the chosen Gaussian distribution
+        $\mathcal{N}(\mu_i, \sigma_i^2)$ and this is the final value sampled from
+        the GMM.
+    \end{enumerate}
+
+    Suppose the output of the algorithm is a random variable $\mathcal{A}$ with
+    PDF $f_{\mathcal{A}}$ and the PDF of the GMM variable $X$ is $f_X$. Show that
+    for every $u \in \mathbb{R}, f_\mathcal{A}(u) = f_\mathcal{X}(u)$, that is,
+    indeed, this algorithm samples from the GMM variable's distribution.
+\end{tcolorbox}
+
+% Solution A
+
+Let $X_i$ be the event of choosing $X_i$ as the Gaussian in the first step. The
+PDF of the algorithm's output can be represented using the Total probability
+theorem as
+\begin{equation*}
+    \begin{aligned}
+        \Pr[X=x] &= \sum_{i=1}^{K}\Pr\left[(X=x)|X_i\right]\cdot \Pr[X_i] \\
+        &= \sum_{i=1}^{K}p_i\Pr[X_i=x],
+    \end{aligned}
+\end{equation*}
+
+since $\Pr[X_i] = p_i$. Hence, if $f_{X_i}$ is the PDF of $X_i$, then
+
+\begin{equation*}
+    \begin{aligned}
+        f_\mathcal{A} &= \sum_{i=1}^{K}p_if_{X_i} \\
+        &= f_X.
+    \end{aligned}
+\end{equation*}
+
+
+\section*{\colS{$\S$} Task B \hfill \normalfont \large [1+2+2]}
+
+\begin{tcolorbox}
+    Let $X$ be a GMM sampled by the method described above, where each Gaussian
+    $X_i \sim \mathcal{N}(\mu_i, \sigma_i^2)$ is chosen with a probability
+    $p_i \ge 0$. Then compute
+
+    \vspace{10pt}
+    \begin{enumerate}
+        \item $\mathbb{E}[X]$.
+        \item $\text{var}[X]$.
+        \item The MGF $M_X(t)$ of $X$.
+    \end{enumerate}
+\end{tcolorbox}
+
+% Solution B
+
+\subsection*{1. Expected Value $\mathbb{E}[X]$}
+
+To find the expected value of $X$, where $X$ is a Gaussian Mixture Model, we use
+the law of total expectation:
+
+\begin{equation*}
+    \begin{aligned}
+        \mathbb{E}[X] &= \sum_{i=1}^{K}\mathbb{E}\left[X|X_i\right]\Pr[X_i] \\
+        &= \sum_{i=1}^{K}\mathbb{E}[X_i]\cdot p_i.
+    \end{aligned}
+\end{equation*}
+Since $\mathbb{E}_{X_i} = \mu_i$, the expected value of $X$ is
+\begin{equation*}
+    \mathbb{E[X]} = \sum_{i=1}^{K}p_i\mu_i. 
+\end{equation*}
+
+\subsection*{2. Variance $\Var[X]$}
+
+We know that the variance of any random variable $Y$ is related to the expected
+value by
+\begin{equation*}
+    \Var[Y] = \mathbb{E}[Y^2] - (\mathbb{E}[Y])^2.
+\end{equation*}
+
+To find variance of $X$, where $X$ is GMM, we again use the law of total
+expectation, but coupled with the above relation:
+
+\begin{equation*}
+    \begin{aligned}
+        \Var[X] &= \mathbb{E}[X^2] - (\mathbb{E}[X])^2 \\
+        &= \sum_{i=1}^{K}\mathbb{E}[X_i^2]\Pr[X_i] -
+        \left(\sum_{i=1}^{K}p_i\mu_i\right)^2 \\
+        &= \sum_{i=1}^{K}p_i\left((\mathbb{E}[X_i])^2\right) -
+        \left(\sum_{i=1}^{K}p_i\mu_i\right)^2 \\
+        &= \sum_{i=1}^{K}p_i\left(\Var[X_i]+(\mathbb{E}[X_i])^2\right) -
+        \left(\sum_{i=1}^{K}p_i\mu_i\right)^2.
+    \end{aligned}
+\end{equation*}
+
+Since $\Var[X_i] = \sigma_i^2$, the variance of $X$ is:
+\begin{equation*}
+    \Var[X] = \sum_{i=1}^K p_i (\sigma_i^2 + \mu_i^2) - \left( \sum_{i=1}^K p_i
+    \mu_i \right)^2.
+\end{equation*}
+
+\subsection*{3. Moment-Generating Function (MGF) $M_X(t$)}
+
+The moment-generating function (MGF) of $X$ is
+
+\begin{equation*}
+    M_X(t) = \mathbb{E}[e^{tX}].
+\end{equation*}
+
+Using the law of total expectation,
+
+\begin{equation*}
+    M_X(t) = \sum_{i=1}^{K} p_i \cdot \mathbb{E}[e^{tX_i}].
+\end{equation*}
+
+For a Gaussian random variable $X_i=\mathcal{N}(\mu_i, \sigma_i^2)$, the MGF is:
+
+\begin{equation*}
+    M_{X_i}(t) = \exp\left(t\mu_i + \frac{1}{2}t^2\sigma_i^2\right)
+\end{equation*}
+
+Therefore, the MGF of $X$ is
+
+\begin{equation*}
+    M_X(t) = \sum_{i=1}^{K} p_i \exp\left(t\mu_i+\frac{1}{2}t^2\sigma_i^2\right).
+\end{equation*}
+
+\section*{\colS{$\S$} Task C \hfill \normalfont \large [1+1+2+2+1+1]}
+
+\begin{tcolorbox}
+    We may be inclined to think \enquote{Isn't this just a weighted sum of
+    Gaussians?} Let us now prove (or disprove) this property. Let us take a random
+    variable $Z$ to be a weighted sum of $k$ \textbf{independent} Gaussian random
+    variables,
+
+    \begin{equation*}
+        Z = \sum_{i = 1}^k p_i X_i,
+    \end{equation*}
+
+    where $X_i \sim \mathcal{N}(\mu_i, \sigma_i^2)$. For our new random variable
+    $Z$ find the same expressions as in Task B:
+
+    \vspace{10pt}
+    \begin{enumerate}
+        \item $\mathbb{E}[Z]$.
+        \item $\text{var}[Z]$.
+        \item The PDF $f_Z(u)$ of $Z$
+        \item The MGF $M_Z(t)$ of $Z$.
+        \item What can you conclude? Do $X$ and $Z$ have the same properties?
+        \item What distribution does $Z$ seem to follow?
+    \end{enumerate}
+\end{tcolorbox}
+
+% Solution C
+
+We are given a random variable $Z$ which is a weighted sum of $k$ independent
+Gaussian random variables:
+
+\begin{equation*}
+    Z = \sum_{i=1}^K p_i X_i
+\end{equation*}
+
+where $X_i \sim \mathcal{N}(\mu_i, \sigma_i^2)$.
+
+\subsection*{1. Expected Value of $Z$}
+
+The expected value $\mathbb{E}[Z]$ is
+
+\begin{equation*}
+    \mathbb{E}[Z] = \mathbb{E} \left[ \sum_{i=1}^K p_i X_i \right]
+\end{equation*}
+
+Using the linearity of expectation,
+
+\begin{equation*}
+    \mathbb{E}[Z] = \sum_{i=1}^K p_i \mathbb{E}[X_i]
+\end{equation*}
+
+Since $X_i$ are Gaussian, we have $\mathbb{E}[X_i] = \mu_i$. Hence,
+
+\begin{equation}
+    \mathbb{E}[Z] = \sum_{i=1}^K p_i \mu_i.
+    \label{e5.1}
+\end{equation}
+
+\subsection*{2. Variance of $Z$}
+
+The variance $\Var[Z]$is
+
+\begin{equation*}
+    \Var[Z] = \Var\left( \sum_{i=1}^K p_i X_i \right)
+\end{equation*}
+
+Since $X_i$ are independent:
+
+\begin{equation*}
+    \begin{aligned}
+        \Var[Z] &= \sum_{i=1}^{K}\Var[p_iX_i] \\
+        &= \sum_{i=1}^K p_i^2 \Var[X_i].
+    \end{aligned}
+\end{equation*}
+
+Now $\Var[X_i] = \sigma_i^2$. Hence,
+
+\begin{equation}
+    \Var[Z] = \sum_{i=1}^K p_i^2 \sigma_i^2.
+    \label{e5.2}
+\end{equation}
+
+\subsection*{3. PDF of $Z$}
+
+Using induction, we will show that $Z$ has a Gaussian distribution.
+
+\textbf{Claim}: For independent Gaussian random variables $X_1, \ldots, X_K$, the
+random variable $\sum_{i=1}^{K}p_iX_i$ is also a Gaussian random variable.
+
+\textbf{Proof}: We will prove the result using induction. The \textbf{base case}
+is $K=1$, when the claim holds by our assumptions. Now, we will try to show that:
+If $Y = \sum_{i=1}^{r-1}p_iX_i$ is a Gaussian, then $\sum_{i=1}^{r}p_iX_i$ is
+also a Gaussian.
+
+Let the pdf of $Y$ be $f_Y$, where
+\begin{equation*}
+    f_Y = \frac{c_Y}{\sqrt{2\pi}\sigma_Y}\exp\left(\frac{-(Y-\mu_Y)^2}
+    {2\sigma_Y^2}\right).
+\end{equation*}
+Then the pdf of $Y'=Y+p_{r}X_{r}$ is
+\begin{equation*}
+    \begin{aligned}
+        f_{Y'} &= \int_{-\infty}^{\infty}f_Y(Y'-x)\cdot p_r\cdot f_{X_{r}}(x)dx \\
+        &= \int_{-\infty}^{\infty}\frac{c_Y}
+        {\sqrtsign{2\pi}\sigma_Y}\exp\left(\frac{-(Y'-x-\mu_Y)^2}
+        {2\sigma_Y^2}\right)\cdot \frac{p_r}
+        {\sqrtsign{2\pi}\sigma_{r}}\exp\left(\frac{-(x-\mu_{r})^2}
+        {2\sigma_{r}^2}\right)dx \\
+        &= \frac{c_Yp_r}{2\pi\sigma_Y\sigma_r}
+        \int_{-\infty}^{\infty}\exp\left(\frac{(x-\mu_r)^2}{2\sigma_r^2} -
+        \frac{(Y'-x-\mu_Y)^2}{2\sigma_Y^2}\right)dx.
+    \end{aligned}
+\end{equation*}
+Simplifying this, and using the Gaussian integral, we get 
+\begin{equation*}
+    f_{Y'} = \frac{c_Yp_r}{\sqrtsign{2\pi(\sigma_X^2+\sigma_Y^2)}}
+    \exp\left(-\frac{(Y'-(\mu_X+\mu_Y)^2)}{2(\sigma_X^2+\sigma_Y^2)}\right).
+\end{equation*}
+which is a Gaussian. Hence, by induction, the pdf for $Z$ will be a gaussian. Let
+the pdf of $Z$ be 
+\begin{equation*}
+    f_Z(u) = \frac{c}{\sqrtsign{2\pi}\sigma_Z}\exp\left(-\frac{(u-\mu_Z)^2}
+    {2\sigma_Z^2}\right).
+\end{equation*}
+Since $Z$ is a Gaussian random variable, $c=1$, $\sigma_Z^2 = \Var[Z]$ and
+$\mu_Z=\mathbb{E}[Z]$. Substituting these values from \ref{e5.1} and \ref{e5.2},
+the PDF of $Z$ is
+\begin{equation}
+    f_Z(u) = \frac{1}{\sqrtsign{2\pi}\sigma}\exp\left(-\frac{(u-\mu)^2}
+    {2\sigma^2}\right)
+    \label{e5.3}
+\end{equation}
+where $\mu = \sum_{i=1}^{K}p_i\mu_i$ and
+$\sigma = \sqrtsign{\sum_{i=1}^{K}p_i^2\mu_i^2}$. 
+
+
+\subsection*{4. MGF of $Z$}
+
+The Moment Generating Function (MGF) of a Gaussian random variable $X_i$ with
+mean $\mu_i$ and variance $\sigma^2$ is:
+\begin{equation*}
+    M_{X_i}(t) = \exp \left( \mu_i t + \frac{1}{2} \sigma_i^2 t^2 \right)
+\end{equation*}
+For $Z = \sum_{i=1}^K p_i X_i$, the MGF is
+\begin{equation*}
+    \begin{aligned}
+        M_Z(t) &= \mathbb{E} \left[ \exp(tZ) \right] \\
+        &= \mathbb{E}\left[\exp\left(t\sum_{i=1}^K p_i X_i\right)\right].
+    \end{aligned}
+\end{equation*}
+Since $X_i$ are independent, 
+\begin{equation*}
+    \begin{aligned}
+        M_Z(t) &= \prod_{i=1}^K \mathbb{E}
+        \left[ \exp \left( t p_i X_i \right) \right] \\
+        &= \prod_{i=1}^K \exp
+        \left( p_i \mu_i t + \frac{1}{2} (p_i^2 \sigma_i^2) t^2 \right) \\
+        &= \exp \left( \sum_{i=1}^K p_i \mu_i t + \frac{1}{2}
+        \sum_{i=1}^K p_i^2 \sigma_i^2 t^2 \right).
+    \end{aligned}
+\end{equation*}
+Hence, the MGF of $Z$ is
+\begin{equation*}
+    M_Z(t) = \exp \left( t\sum_{i=1}^K p_i \mu_i + \frac{1}{2}t^2\sum_{i=1}^K
+    p_i^2 \sigma_i^2 \right).
+\end{equation*}
+
+\subsection*{5. Conclusion}
+
+We see that $X$ and $Z$ differ in their variance and MGF, and are hence not the
+same random variable. $X$ is not a Gaussian in general, while $Z$ always has a
+Gaussian distribution as seen from its PDF.
+
+\subsection*{6. Distribution of $Z$}
+As seen in \ref{e5.3}, $Z$ follows a Gaussian distribution. Specifically, $Z$ is
+distributed as:
+\begin{equation*}
+    Z \sim \mathcal{N} \left( \sum_{i=1}^K p_i \mu_i, \sum_{i=1}^K p_i^2
+    \sigma_i^2 \right)
+\end{equation*}
+
+
+\section*{\colS{$\S$} Task D (B) \hfill \normalfont \large [3]}
+
+\begin{tcolorbox}
+    \vspace{10pt}
+    \begin{mdframed}[backgroundcolor=lightyellow, linecolor=darkyellow,
+    linewidth=1.5pt]
+        \textbf{Theorem 8.}
+        \textit{For a random variable $X$, if it is}
+
+        \begin{enumerate}
+            \item \textit{either finite and discrete,}
+            \item \textit{or if it is continuous and its MGF $\phi_X(t)$ is known
+            for some (non-infinitesimal) interval,}
+        \end{enumerate}
+
+        \textit{then its MGF and PDF \textbf{uniquely} determine each other.}
+    \end{mdframed}
+
+    Prove the above theorem for the finite discrete case.
+    
+    What can you now conclude about $X$ and $Z$? Also, explain logically why this
+    may be the case.
+\end{tcolorbox}
+
+% Solution D
+
+We will show that for two random variables $X$ and $Y$:
+\begin{itemize}
+    \item If their PDFs are the same, they have the same MGF.
+    \item If their MGFs are the same, they have the same PDF. 
+\end{itemize}
+
+\subsection*{Discrete and Finite random variables}
+
+Let the PDFs of $X$ and $Y$ be $f_X$ and $f_Y$ respectively. Let the MGFs be
+$M_X$ and $M_Y$ respectively.
+
+\medskip\noindent\textbf{Same PDF implies same MGF}: Let the common support of
+$X$ and $Y$ be $\{a_1, a_2, \ldots, a_k\}$. Then,
+\begin{equation*}
+    \begin{aligned}
+        M_X(t) &= \mathbb{E}[e^{tx}] \\
+        &= \sum_{i=1}^{k}\Pr[X=a_i]e^{ta_i} \\
+        &= \sum_{i=1}^{k}\Pr[Y=a_i]e^{ta_i} \\
+        &= M_Y(t).
+    \end{aligned}
+\end{equation*}
+Hence, the MGFs are identical.
+
+\medskip\noindent\textbf{Same MGF implies same PDF}: Let the support of $X$ be 
+$\{a_1, \ldots, a_k\}\cup\{c_1, \ldots, c_l\}$, and the support of $Y$ be
+$\{b_1, \ldots, b_m\}\cup\{c_1, \ldots, c_l\}$, where $a_i \ne b_j$. Then
+
+\begin{equation*}
+    M_X(t) = \sum_{i=1}^{k}\Pr[X=a_i]e^{ta_i} + \sum_{i=1}^{l}\Pr[X=c_i]e^{tc_i}
+\end{equation*}
+and
+
+\begin{equation*}
+    M_Y(t) = \sum_{i=1}^{m}\Pr[Y=b_i]e^{tb_i} + \sum_{i=1}^{l}\Pr[X=c_i]e^{tc_i}.
+\end{equation*}
+Since $M_X(t)=M_Y(t)$,
+
+\begin{equation*}
+    \sum_{i=1}^{k}\Pr[X=a_i]e^{ta_i} + \sum_{i=1}^{l}
+    (\Pr[X=c_i]-\Pr[Y=c_i])e^{tc_i} - \sum_{i=1}^{m}\Pr[Y=b_i]e^{tb_i} = 0.
+\end{equation*}
+This holds for infinitely many values of $t$. Now, the above equation is a system
+of linear equations in the variables $e^{ta_i}, e^{tb_i}, e^{tc_i}$. Since there
+are more than $(k+l+m)$ roots of the system, the coefficients must all be 0.
+Hence,
+
+\begin{equation*}
+    \begin{aligned}
+        \Pr[X=a_i] &= 0 \\
+        \Pr[X=c_i] &= \Pr[Y=c_i] \forall i\in \{1, \ldots, l\} \\
+        \Pr[Y=b_i] &= 0.
+    \end{aligned}
+\end{equation*}
+Hence, $X$ and $Y$ have the same PDFs.

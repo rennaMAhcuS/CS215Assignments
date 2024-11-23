@@ -1,0 +1,220 @@
+% Preamble
+% {
+\documentclass[10pt]{report}
+\usepackage{graphicx, caption, subcaption, float, xcolor}
+
+% For coloring the equations
+\usepackage{xcolor}
+\definecolor{RoyalBlue}{RGB}{65, 105, 225}
+\everydisplay{\color{RoyalBlue}}
+
+% Hyperlinks setup
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=red,
+    urlcolor=magenta
+}
+
+% Font setup
+\usepackage{fontspec}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{xfrac}
+\usepackage{mathpazo}
+\usepackage[cal=pxtx]{mathalpha}
+\setmainfont[
+    Path = assets/fonts/,
+    UprightFont = *-Regular,
+    BoldFont = *-Bold,
+    ItalicFont = *-Italic,
+    BoldItalicFont = *-BoldItalic
+]{Palatino}
+\setmonofont[
+    Path = assets/fonts/,
+    UprightFont = *,
+    BoldFont = *,
+    ItalicFont = *,
+    BoldItalicFont = *,
+    Scale = MatchLowercase
+]{Monaco}
+% For quotes
+\usepackage{csquotes}
+% For floor and ceil
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+% Page dimensions and border setup
+\usepackage{geometry}
+\geometry{
+    a4paper,
+    left=12mm,
+    right=12mm,
+    top=20mm,
+    bottom=20mm
+}
+
+\renewcommand{\chaptername}[1]{\markboth{#1}{}}
+
+% Header and Footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+% Header
+\renewcommand{\headrulewidth}{0.5pt}
+    \fancyhead[L]{\textbf{CS215: Assignment 2}}
+    \fancyhead[C]{\textbf{\leftmark}}
+    \fancyhead[R]{\textbf{\thepage}}
+% Footer
+\renewcommand{\footrulewidth}{1pt}
+    \fancyfoot[L]{\textbf{Abhineet Majety}}
+    \fancyfoot[C]{\textbf{Mohana Evuri}}
+    \fancyfoot[R]{\textbf{Saksham Jain}}
+% Title page
+\fancypagestyle{plain}{
+    \fancyhf{}
+    % Header
+    \renewcommand{\headrulewidth}{0.5pt}
+        \fancyhead[L]{\textbf{CS215: Assignment 2}}
+        \fancyhead[C]{\textbf{\leftmark}}
+        \fancyhead[R]{\textbf{\thepage}}
+    % Footer
+    \renewcommand{\footrulewidth}{1pt}
+        \fancyfoot[L]{\textbf{Abhineet Majety}}
+        \fancyfoot[C]{\textbf{Mohana Evuri}}
+        \fancyfoot[R]{\textbf{Saksham Jain}}
+}
+
+% Chapter and Section
+\usepackage{titlesec, textcomp}
+% Chapter
+\definecolor{RosyPink}{RGB}{216, 18, 126}
+\titleformat{\chapter}[display]
+  {\Large\bfseries\color{RosyPink}}
+  {\flushright\color{RosyPink}\MakeUppercase{Problem}\hspace{1ex}
+  {\fontsize{60}{60}\selectfont\thechapter}}
+  {10pt}
+  {\Huge\bfseries\color{black}}
+% Section
+\newcommand{\colS}[1]{\textcolor{red}{#1}}
+  
+% Box
+\usepackage{tcolorbox, mdframed}
+\mdfsetup{
+  skipabove=10pt,
+  skipbelow=10pt
+}
+\definecolor{lightblue}{RGB}{247, 247, 255}
+\definecolor{lightyellow}{RGB}{255, 253, 230}
+\definecolor{darkyellow}{RGB}{191, 127, 64}
+\tcbset{
+  colback=gray!5!white,
+  colframe=gray!50!black,
+  title=Problem Statement,
+  fonttitle=\bfseries,
+  coltitle=white,
+  colbacktitle=gray!70!black,
+  boxrule=0.5mm,
+  left=1mm,
+  right=1mm,
+  top=1mm,
+  bottom=1mm,
+  arc=2mm,
+  boxsep=2mm,
+  width=\linewidth,
+  parbox=false
+}
+
+% Code
+\usepackage{listings}
+% Theme
+\definecolor{background}{RGB}{40, 42, 54}
+\definecolor{foreground}{RGB}{248, 248, 242}
+\definecolor{comment}{RGB}{98, 114, 164}
+\definecolor{keyword}{RGB}{255, 121, 198}
+\definecolor{string}{RGB}{241, 250, 140}
+\definecolor{function}{RGB}{80, 250, 123}
+\definecolor{variable}{RGB}{139, 233, 253}
+\definecolor{builtins}{RGB}{189, 147, 249}
+\definecolor{orange}{RGB}{255, 184, 108}
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small\color{foreground},
+    backgroundcolor=\color{background},
+    keywordstyle=\color{keyword},
+    commentstyle=\color{comment},
+    stringstyle=\color{string},
+    identifierstyle=\color{variable},
+    numberstyle=\tiny\color{comment},
+    numbers=left,
+    stepnumber=1,
+    numbersep=5pt,
+    showstringspaces=false,
+    frame=single,
+    rulecolor=\color{comment},
+    tabsize=4,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=true,
+    keywordstyle=[2]{\color{builtins}},
+    emph={True, False, None},
+    emphstyle={\color{orange}},
+    moredelim=*[s][\color{function}]{def}{\ },
+    moredelim=*[s][\color{class}]{class}{\ }
+}
+\renewcommand{\lstlistingname}{Code}
+% \begin{lstlisting}[caption={Your caption here}, label={code:your_label}]
+% # Your code here
+% \end{lstlisting}
+
+% Probability distributions
+\newcommand{\Ber}{\text{Ber}}
+\newcommand{\Bin}{\text{Bin}}
+\newcommand{\Geo}{\text{Geo}}
+\newcommand{\NegBin}{\text{NegBin}}
+\newcommand{\Var}{\text{Var}}
+
+
+% Custom itemize
+\def\labelitemi{--}
+
+% Title and Coverpage
+\usepackage{eso-pic}
+\title{\textbf{\huge Assignment 2 \\[10pt] \Large CS215}}
+\author{
+    \textit{Abhineet Majety} \\
+    23B0923
+    \and
+    \textit{Mohana Evuri} \\
+    23B1017
+    \and
+    \textit{Saksham Jain} \\
+    23B1074
+    % For maintaining a gap between the author and the date
+    \\[20pt]
+}
+\date{
+    \Large\textbf{Fall 2024}
+}
+
+\begin{document}
+
+% Background image
+\AddToShipoutPictureBG*{
+    \put(-25,-25){
+        \includegraphics[width=(\paperwidth + 50pt),height=(\paperheight + 50pt)]
+        {assets/images/CS215AssignmentCover.png}
+    }
+}
+
+\maketitle
+
+\tableofcontents
+
+\include{problems/problem1}
+\include{problems/problem2}
+\include{problems/problem3}
+\include{problems/problem4}
+\include{problems/problem5}
+
+\end{document}

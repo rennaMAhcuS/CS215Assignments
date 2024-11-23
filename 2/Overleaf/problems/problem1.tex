@@ -1,0 +1,356 @@
+\chapter{Mathemagic}
+
+\begin{tcolorbox}[title=]
+    We explore some connections between special random variables via the
+    notion of probability-generating functions.
+    
+    \vspace{10pt}
+    \begin{mdframed}[backgroundcolor=lightblue, linecolor=blue, linewidth=1.5pt]
+        \textbf{Definition 1 (PGF, MGF).}
+        \textit{Let $X$ be a random variable taking on only non-negative integer
+        values. Suppose that $X$ is distributed according to probability mass
+        function $P$. We define the probability-generating function of the
+        distribution $P[X]$ of random variable $X$ by}
+        
+        \begin{equation*}
+            G(z) := \mathbb{E}[z^X] = \sum_{n = 0}^{\infty} P[X = n] z^n.    
+        \end{equation*}
+        
+        \textit{The \emph{moment-generating function} of the same distribution is
+        defined by $M(t) := G(e^t)$ for $t$ such that the series for $G$
+        converges.}
+    \end{mdframed}
+\end{tcolorbox}
+
+\section*{\colS{$\S$} Task A \hfill \normalfont \large [1]}
+
+\begin{tcolorbox}
+    Derive the PGF when $X$ is a Bernoulli random variable with parameter $p$,
+    that is, $X \sim \text{Ber}(p)$. Call this PGF $G_\text{Ber}$.
+\end{tcolorbox}
+
+% Solution A
+
+For Bernoulli random variable $X\sim\Ber(p)$, the probability mass function is
+\begin{equation}
+    \begin{aligned}
+        P[X=x] = \begin{cases}
+            1-p & x=0 \\
+            p & x=1 \\
+            0 & \text{otherwise}
+        \end{cases}
+    \end{aligned}
+    \label{e1.1}
+\end{equation}
+
+Hence, the PGF for Bernoulli random variable is
+\begin{equation}
+    \begin{aligned}
+        G_{\Ber}(z) &= E[z^X] \\
+        &= (1-p)z^0 + pz^1 \\
+        &= 1-p + pz.
+    \end{aligned}
+    \label{e1.2}
+\end{equation}
+
+
+\section*{\colS{$\S$} Task B \hfill \normalfont \large [2]}
+
+\begin{tcolorbox}
+    Let $G_\text{Bin}$ be the PGF when $X \sim \text{Bin}(n, p)$. Show that
+    $G_\text{Bin}(z) = G_\text{Ber}(z)^n$.
+\end{tcolorbox}
+
+% Solution B
+
+For Binomial random variable $X\sim\Bin(n, p)$, the probability mass function is
+\begin{equation}
+    \begin{aligned}
+        P[X=x] = \begin{cases}
+            \binom{n}{x}p^x(1-p)^{n-x} & x=0, 1, 2, \ldots, n \\
+            0 & \text{otherwise}
+        \end{cases}
+    \end{aligned}
+    \label{e1.3}
+\end{equation}
+
+Hence, the PGF for Binomial random variable is
+\begin{equation}
+    \begin{aligned}
+        G_{\Bin}(z) &= E[z^X] \\
+        &= \sum_{x=0}^{n} \binom{n}{x}p^x(1-p)^{n-x}z^x \\
+        &= \sum_{x=0}^{n} \binom{n}{x}(pz)^x(1-p)^{n-x} \\
+        &= (pz + 1 - p)^n.
+    \end{aligned}
+    \label{e1.4}
+\end{equation}
+
+Hence,
+\begin{equation}
+    G_{\Bin}(z) = G_{\Ber}(z)^n
+    \label{e1.5}
+\end{equation}
+
+
+\section*{\colS{$\S$} Task C ($\star$) \hfill \normalfont \large [4]}
+
+\begin{tcolorbox}
+    Suppose that $X_1, X_2, \cdots, X_k$ are independent non-negative-integer
+    valued random variables, each distributed with the same probability mass
+    function $P$.
+    Let $G$ be their common PGF. Consider random variable $X = X_1 + X_2 + \cdots
+    + X_k$ defined on the cartesian product of the sample spaces underlying the
+    random variables $X_i$. Let the PGF corresponding to $X$ be $G_\Sigma$. Show
+    that $G_\Sigma(z) = G(z)^k$.
+\end{tcolorbox}
+
+% Solution C
+
+Consider random variable $X=X_1+X_2+\cdots X_k$, where $X_1, X_2, \ldots, X_k$
+are independent non-negative integer-valued random variables with the same
+probability mass function $P$ and probability generating function $G$.
+
+We know that for two independent random variables $X$ and $Y$, $E[XY]=E[X]\cdot
+E[Y]$. Also, $z^X$ and $z^Y$ are independent random variables. Using these
+results, the probability generating function for $X$ is,
+\begin{equation}
+    \begin{aligned}
+        G_\Sigma(z) &= E[z^X] \\
+        &= E[z^{X_1+X_2+\cdots+X_k}] \\
+        &= E[z^{X_1}z^{X_2}\cdots z^{X_k}] \\
+        &= E[z^{X_1}]\cdot E[z^{X_2}]\cdots E[z^{X_k}] \\
+        &= G(z)^k.
+    \end{aligned}
+    \label{e1.6}
+\end{equation}
+
+
+\section*{\colS{$\S$} Task D \hfill \normalfont \large [1]}
+
+\begin{tcolorbox}
+    Consider now the Geometric distribution. Let $X \sim \text{Geo}(p)$. Derive
+    its PGF.
+\end{tcolorbox}
+
+% Solution D
+
+For the Geometric random variable $X \sim \Geo(p)$, the probability mass function
+is
+\begin{equation}
+    \begin{aligned}
+        P[X=n]=(1-p)^{n-1}\cdot p
+    \end{aligned}
+     \label{e1.7}
+\end{equation}
+
+where $n=1, 2, \ldots$
+
+Hence, the probability-generating function is
+\begin{equation}
+    \begin{aligned}
+        G_{\Geo}(z) &= E[z^X] \\
+        &= \sum_{n=1}^{\infty}(1-p)^{n-1}pz^n \\
+        &= pz\cdot\sum_{n=0}^\infty((1-p)z)^n \\
+        &= \frac{pz}{1-(1-p)z} \\
+        &= \frac{pz}{pz+1-z}.
+    \end{aligned}
+    \label{e1.8}
+\end{equation}
+
+$|(1-p)z|<1$ is needed for the geometric series obtained to converge.
+
+
+\section*{\colS{$\S$} Task E \hfill \normalfont \large [3]}
+
+\begin{tcolorbox}
+    Consider $X \sim \text{Bin}(n, p)$ and $Y \sim \text{NegBin}(n, p)$. Let their
+    PGFs be $G_X^{(n, p)}(z)$ and $G_Y^{(n, p)}(z)$ respectively. Show using
+    previous tasks or otherwise that for every $0 < p < 1$, we have
+
+    \begin{equation*}
+        G_Y^{(n, p)}(z) = \left( G_X^{(n, p^{-1})}(z^{-1}) \right)^{-1}.
+    \end{equation*}
+\end{tcolorbox}
+
+% Solution E
+
+Consider $X\sim\Bin(n. p)$ and $Y\sim \NegBin(n, p)$. Then $Y$ can be expressed
+as a sum of $n$ geometric random variables $Y_1, Y_2, \ldots, Y_n\sim \Geo(p)$
+such that $Y=Y_1+\cdots+Y_n$. Using the results \ref{e1.4}, \ref{e1.6} and
+\ref{e1.8}, the PGF of $Y$ is
+\begin{equation}
+    \begin{aligned}
+        G_Y^{(n, p)}(z) &= \left(\frac{pz}{pz+1-z}\right)^n \\
+        &= \left(\frac{1}{1+\frac{1}{pz}-\frac{1}{p}}\right)^n \\
+        &= \left(\left(\frac{1}{pz}+1-\frac{1}{p}\right)^n\right)^{-1} \\
+        &= \left(G_X^{(n, p^{-1})}(z^{-1})\right)^{-1}
+    \end{aligned}
+    \label{e1.9}
+\end{equation}
+
+for every $0<p<1$.
+
+As the previous task shows, the series converges for $|(1-p)z|<1$.
+
+
+\begin{tcolorbox}[title=]
+    That shows that the negative binomial distribution is not only morally an
+    \enquote{inverse} of the binomial distribution (in that it models the number
+    of trials while fixing the number of successes, while the binomial fixes the
+    number of trials and models the number of successes) but negates the binomial
+    distribution in every way possible! There is more; see Task F below.
+\end{tcolorbox}
+
+\section*{\colS{$\S$} Task F \hfill \normalfont \large [2]}
+
+\begin{tcolorbox}
+    We shall derive the negative binomial theorem using the result from Task E.
+    First, we generalize the binomial coefficient: let $\alpha \in \mathbb{R}$ and
+    $k \in \mathbb{N}$. Then
+
+    \begin{equation*}
+        \binom{\alpha}{k} := \dfrac{\alpha(\alpha - 1)\cdots(\alpha - k + 1)}{k!}
+    \end{equation*}
+    
+    \vspace{10pt}
+    \begin{mdframed}[backgroundcolor=lightyellow, linecolor=darkyellow,
+    linewidth=1.5pt]
+        \textbf{Theorem 2 (Binomial theorem, negative exponent).}
+        \textit{Let $n \in \mathbb{N}$ and $|x| < 1$. Then}
+
+        \begin{equation*}
+            (1 - x)^{-n} = \sum_{r = 0}^{\infty} \binom{n + r - 1}{r} (-x)^r
+            = \sum_{r = 0}^{\infty} \binom{-n}{r} x^r.
+        \end{equation*}
+    \end{mdframed}
+
+    It is almost (the summation not being finite is the only difference) as if one
+    could put a negative number for the exponent in the usual binomial
+    theorem.
+\end{tcolorbox}
+
+% Solution F
+
+Consider $X\sim\Bin(n. p)$ and $Y\sim \NegBin(n, p)$. Using the definition of
+probability generating function, we have
+\begin{equation}
+    \begin{aligned}
+        G_Y^{(n, p)}(z) &= E[z^Y] \\
+        &= \sum_{r=0}^{\infty}P[Y=r]z^r \\
+        &= \sum_{r=n}^{\infty}\binom{r-1}{r-n}p^n(1-p)^{r-n}z^r
+    \end{aligned}
+    \label{e1.10}
+\end{equation}
+
+since $P[Y=r]=0$ for $0\le r<n$. Substituting $r-n$ for $r$, and using result
+\ref{e1.9}, we get
+\begin{equation}
+    \begin{aligned}
+        \left(G_X^{(n, p^{-1})}(z^{-1})\right)^{-1} = \sum_{r=0}^\infty\binom{r+n
+        -1}{r}p^n(1-p)^r z^{r+n}.
+    \end{aligned}
+    \label{e1.11}
+\end{equation}
+
+Using result \ref{e1.4}, we get
+\begin{equation}
+    \begin{aligned}
+        \left(\frac{1}{pz}+1-\frac{1}{p}\right)^{-n} &=
+        p^nz^n\sum_{r=0}^\infty\binom{r+n-1}{r}(1-p)^r z^r \\
+        \implies (1+pz-z)^{-n} &= \sum_{r=0}^\infty\binom{r+n-1}{r}((1-p)z)^r \\
+        \implies (1+z(p-1))^{-n} &= \sum_{r=0}^\infty(-1)^r\binom{r+n-1}{r}(z(p
+        -1))^r.
+    \end{aligned}
+    \label{e1.12}
+\end{equation}
+
+Substituting $x=z(p-1)$, we get
+\begin{equation}
+    \begin{aligned}
+        (1+x)^{-n} &= \sum_{r=0}^\infty(-1)^r\binom{r+n-1}{r}x^r.
+    \end{aligned}
+    \label{e1.13}
+\end{equation}
+
+This is the negative binomial theorem. The series on the right converges for $|(1-
+p)z|<1$, i.e., $|x|<1$.
+
+
+\section*{\colS{$\S$} Task G \hfill \normalfont \large [2]}
+
+\begin{tcolorbox}
+    An easy consequence of all the hard work. Suppose the PGF of random
+    variable $X$ is $G(z)$. Show that the expectation of $X$ is simply the
+    derivative of $G$ at 1, i.e., $\mathbb{E}[X] = G'(1)$. Using this and the PGFs
+    constructed previously, derive the means of the Bernoulli, Binomial,
+    Geometric and Negative binomial distributions are a function of their
+    parameters.
+\end{tcolorbox}
+
+% Solution G
+
+The PGF of random variable $X$ is defined as $G(z)=\sum_{n=0}^{\infty}P[X=n]z^n$.
+Hence
+\begin{equation}
+    \begin{aligned}
+        G'(z) = \sum_{n=0}^{\infty}P[X=n]nz^{n-1}.
+    \end{aligned}
+    \label{e1.14}
+\end{equation}
+
+Hence,
+\begin{equation}
+    \begin{aligned}
+        G'(1) = \sum_{n=0}^{\infty}P[X=n]\cdot n = E[X].
+    \end{aligned}
+    \label{e1.15}
+\end{equation}
+
+\subsection*{Finding means of various distributions}
+
+\noindent\textbf{Bernoulli}: For random variable $X\sim \Ber(p)$, using the
+result \ref{e1.2},
+\begin{equation}
+    \begin{aligned}
+        G(z) &= 1-p + pz \\
+        \implies G'(z) &= p \\
+        \implies G'(1) &= p \\
+        \implies E[X] &= p.
+    \end{aligned}
+    \label{e1.16}
+\end{equation}
+
+\noindent\textbf{Binomial}: For $X\sim \Bin(n, p)$, using the result \ref{e1.4},
+\begin{equation}
+    \begin{aligned}
+        G(z) &= (pz + 1 - p)^n \\
+        \implies G'(z) &= n(pz + 1 - p)^{n-1}p \\
+        \implies G'(1) &= np \\
+        \implies E[X] &= np.
+    \end{aligned}
+    \label{e1.17}
+\end{equation}
+
+\noindent\textbf{Geometric}: For $x\sim \Geo(p)$, using the result \ref{e1.8},
+\begin{equation}
+    \begin{aligned}
+        G(z) &= \frac{pz}{pz+1-z} \\
+        \implies G'(z) &= \frac{p(pz+1-z) - pz(p-1)}{(pz+1-z)^2} \\
+        \implies G'(1) &= \frac{p}{(p)^2} \\
+        \implies E[X] &= \frac{1}{p}.
+    \end{aligned}
+    \label{e1.18}
+\end{equation}
+
+\noindent\textbf{Negative Binomial}: For $X\sim \NegBin(n,p)$, using the result
+\ref{e1.9},
+\begin{equation}
+    \begin{aligned}
+        G(z) &= \left(\frac{pz}{pz+1-z}\right)^n \\
+        \implies G'(z) &= n\left(\frac{pz}{pz+1-z}\right)^{n-1}\frac{p(pz+1-z) - 
+        pz(p-1)}{(pz+1-z)^2} \\
+        \implies G'(1) &= n(1)^{n-1}\frac{p}{p^2} \\
+        \implies E[X] &= \frac{n}{p}.
+    \end{aligned}
+    \label{e1.19}
+\end{equation}

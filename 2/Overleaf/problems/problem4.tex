@@ -1,0 +1,440 @@
+\chapter{Quality in Inequalities}
+
+\begin{tcolorbox}[title=]
+    Let us dive deeper into the inequalities we have studied in class (and a new
+    one):
+
+    \vspace{10pt}
+    \begin{mdframed}[backgroundcolor=lightblue, linecolor=blue, linewidth=1.5pt]
+        \textbf{Definition 5 (Markov's Inequality).}
+        \textit{Let $X$ be any non-negative random variable and $a > 0$,}
+        
+        \begin{equation*}
+            \text{P}[X \ge a] \le \dfrac{\mathbb{E}[X]}{a}.
+        \end{equation*}
+    \end{mdframed}
+\end{tcolorbox}
+
+\section*{\colS{$\S$} Task A \hfill \normalfont \large [1+2]}
+
+\begin{tcolorbox}
+    Give an intuitive \enquote{proof} for this inequality and a reason why it
+    could be correct (you can try playing around with different $ X$'s and $a$'s).
+    
+    Now, prove this inequality rigorously using continuous random variables. Try
+    to reason about the definition of expectation and how you can manipulate it
+    to serve your purpose.
+\end{tcolorbox}
+
+% Solution A
+
+The variable $X$ is a non-negative random variable. Hence, there is a lower bound
+on the value that $X$ can take. Intuitively, for a given expected value
+$\mathbb{E}[X]$, there must also be a upper bound on the probability of $X$
+taking a large value.
+
+Let us look at the rigorous proof. Consider a continuous random variable $x$ with
+pdf $f(x)$, and let $a>0$. The expected value is defined as
+
+\begin{equation*}
+    \begin{aligned}
+        \mathbb{E}[x] &= \int_{0}^{\infty}xf(x)dx \\
+        &= \int_{0}^{a}xf(x)dx + \int_{a}^{\infty}xf(x)dx \\
+        &\ge \int_{0}^{a}0\cdot f(x)dx + \int_{a}^{\infty}a\cdot f(x)dx \\
+        &\ge 0+a\int_{a}^{\infty}f(x)dx.
+    \end{aligned}
+\end{equation*}
+
+Now, $P[x\ge a]=\int_{a}^{\infty}f(x)dx$. Hence,
+
+\begin{equation*}
+    \begin{aligned}
+        \mathbb{E}[x] &\ge a\cdot P[x\ge a] \\
+        \implies P[x\ge a] &\le \frac{\mathbb{E}[x]}{a}.
+    \end{aligned}
+\end{equation*}
+
+Hence, Markov's inequality holds.
+
+\section*{\colS{$\S$} Task B \hfill \normalfont \large [4]}
+
+\begin{tcolorbox}
+    Now that we have established this inequality, let us move on to linking it to
+    what we have already studied in class is the Chebyshev-Cantelli inequality.
+
+    Use Markov's inequality to prove the following version of the Chebyshev
+    Cantelli inequality for a random variable $X$ with mean $\mu$ and variance
+    $\sigma^2$: for every $\tau > 0$, we have
+
+    \begin{equation*}
+        \text{P}[(x - \mu) \ge \tau] \le \dfrac{\sigma^2}{\sigma^2 + \tau^2}.
+    \end{equation*}
+\end{tcolorbox}
+
+% Solution B
+
+Let $X$ be any random variable with mean $\mu$ and variance $\sigma^2$. Consider
+a new random variable $Y = X-\mu$. Then $\mathbb{E}[Y]=0$ and $Var[Y]=\sigma^2$.
+Let $\tau>0$ be a number. Let $t$ be a number such that $t+\tau>0$. Then
+
+\begin{equation*}
+    \begin{aligned}
+        \Pr[Y \geq \tau] &= \Pr[Y + t \geq \tau + t] \\
+        &= \Pr\left[\left(\frac{Y+t}{\tau+t}\right)\geq 1\right] \\
+        &\le \Pr\left[\left(\frac{Y+t}{\tau+t}\right)^2\geq 1\right]
+    \end{aligned}
+\end{equation*}
+
+Using Markov's inequality on the non-negative random variable
+$\frac{Y+t}{\tau+t}$, we get
+
+\begin{equation*}
+    \begin{aligned}
+        \Pr[Y\ge\tau] &\le \mathbb{E}\left[\left(\frac{Y+t}
+        {\tau+t}\right)^2\right] \\
+        &\le \frac{\mathbb{E}[(Y+t)^2]}{(\tau+t)^2} \\
+        &\le \frac{\mathbb{E}[Y^2]+0+t^2}{(\tau+t)^2} \\
+        &\le \frac{0+\sigma^2+t^2}{(\tau+t)^2}.
+    \end{aligned}
+\end{equation*}
+
+Hence, the inequality
+
+\begin{equation*}
+    \Pr[Y\ge\tau]\le \frac{\sigma^2+t^2}{(\tau+t)^2}
+\end{equation*}
+
+should hold for any $t$ such that $t+\tau>0$. It can be shown that the RHS is
+minimized for $t=\frac{\sigma^2}{\tau}$. Also, $\tau+t\ge 0$ in this case. Hence
+
+\begin{equation*}
+    \begin{aligned}
+        \Pr[X-\mu>\tau] &\le \frac{\sigma^2+\frac{\sigma^4}{\tau^2}}
+        {\left(\tau+\frac{\sigma^2}{\tau}\right)^2} \\
+        &\le \sigma^2\frac{\tau^2+\sigma^2}{(\tau^2+\sigma^2)^2} \\
+        &\le \frac{\sigma^2}{\sigma^2+\tau^2}.
+    \end{aligned}
+\end{equation*}
+
+Hence, Chebyshev-Cantelli inequality holds.
+
+\section*{\colS{$\S$} Task C \hfill \normalfont \large [3]}
+
+\begin{tcolorbox}
+    Yay, our inequalities are successfully linked! Now we can move on to proving a
+    strong bound through these inequalities... start by showing that for a
+    random variable $X$ where $M_X(t)$ represents the MGF (see Question 1) for
+    $X$, the following hold:
+
+    \begin{equation*}
+        P[X \ge x] \le e^{-tx} M_X(t) \ \forall t > 0.
+    \end{equation*}
+    \begin{equation*}
+        P[X \le x] \le e^{-tx} M_X(t) \ \forall t < 0.
+    \end{equation*}
+\end{tcolorbox}
+
+% Solution C
+
+The MGF is defined by $M_X(t) = \mathbb{E}[e^{tX}]$. Now, for $t>0$,
+
+\begin{equation*}
+    \begin{aligned}
+        \Pr[X\ge x] &= \Pr[tX\ge tx] \\
+        &= \Pr[e^{tX}\ge e^{tx}].
+    \end{aligned}
+\end{equation*}
+
+Now, using Markov's inequality on the random variable $e^{tX}$, we get
+
+\begin{equation*}
+    \Pr[e^{tX}\ge e^{tx}] \le \mathbb{E}[e^{tX}]\cdot e^{-tx}.
+\end{equation*}
+
+Hence, using the definition of MGF,
+
+\begin{equation}
+    \Pr[X\ge x] \le e^{-tx}M_X(t) \, \forall t>0.
+    \label{e4.1}
+\end{equation}
+
+Similarly, for $t<0$,
+
+\begin{equation*}
+    \begin{aligned}
+        \Pr[X\le x] &= \Pr[tX\ge tx] \\
+        &= \Pr[e^{tX} \ge e^{tx}].
+    \end{aligned}
+\end{equation*}
+
+Using Markov's inequality and the definition of MGF, we get
+
+\begin{equation*}
+        \Pr[e\le x] \le \mathbb{E}[e^{tX}]e^{-tx}.
+\end{equation*}
+
+Hence,
+
+\begin{equation}
+    \Pr[X\le x] \le e^{-tx}M_X(t) \, \forall t<0.
+    \label{e4.2}
+\end{equation}
+
+The required inequalities are \ref{e4.1} and \ref{e4.2}.
+
+\section*{\colS{$\S$} Task D ($\star$) \hfill \normalfont \large [1+4+1]}
+
+\begin{tcolorbox}
+    Now take $n$ \textbf{independent} Bernoulli random variables $X_1, X_2,
+    \ldots, X_n$ where $\mathbb{E}[X_i] = p_i$. Since each $X_i$ has the same
+    distribution and is independent of all other $X_j's$, we call the collection
+    of random variables $X_1, \ldots, X_n$ a collection of \textit{independent}
+    and \textit{identically distributed} (i.i.d) random variables.
+    
+    Let us define a new random variable $Y$ as the sum of these random variables
+    that is, $Y = \sum_{i = 1}^n X_i$.
+
+    \vspace{10pt}
+    \begin{enumerate}
+        \item What is the expectation of $Y$?
+        \item Show that
+
+            \begin{equation*}
+                P[Y \ge (1 + \delta) \mu] \le
+                \dfrac{e^{\mu(e^t - 1)}}{e^{(1 + \delta) t \mu}}
+            \end{equation*}
+
+        \item Show how to improve this bound further by choosing an appropriate
+        value of $t$.
+    \end{enumerate}
+\end{tcolorbox}
+
+% Solution D
+
+Take $n$ independent Bernoulli random variables $X_1, X_2, \ldots, X_n$ where
+$\mathbb{E}[X_i]=p_i$. Since the random variables are given to be identically
+distributed, let $p=p_i$. Define random variable $Y=\sum_{i=1}^{n}X_i$.
+
+\subsection*{1}
+
+The expected value of $Y$ is 
+
+\begin{equation*}
+    \begin{aligned}
+        \mathbb{E}[Y] &= \mathbb{E}\left[\sum_{i=1}^{n}X_i\right] \\
+        &= \sum_{i=}^{n}\mathbb{E}[X_i] \\
+        &= \sum_{i=1}^{n}p_i \\
+        &= np.
+    \end{aligned}
+\end{equation*}
+Hence, $\mu=\mathbb{E}[Y]=np$.
+
+\subsection*{2}
+
+Since $X_i$ are independent, the MGF of $Y$ is given by
+
+\begin{equation*}
+    \begin{aligned}
+        M_Y(t) &= \mathbb{E}[e^{tY}] \\
+        &= \mathbb{E}[e^{t(X_1+\cdots+X_n)}] \\
+        &= \left(\mathbb{E}[e^{tX}]\right)^n \\
+        &= (M_X(t))^n
+    \end{aligned}
+\end{equation*}
+where $X$ is a Bernoulli random variable. Using \ref{e1.2} with $z=e^t$, we get
+
+\begin{equation*}
+    \begin{aligned}
+        M_X(t) &= 1-p +pe^t \\
+        &= 1+p(e^t-1) \\
+        &\le e^{p(e^t-1)}
+    \end{aligned}
+\end{equation*}
+since $e^x-x-1\ge 0\ \forall x\in\mathbb{R}$. Using this result,
+
+\begin{equation*}
+    \begin{aligned}
+        M_Y(t) &\le \left(e^{p(e^t-1)}\right)^n \\
+        &\le e^{np(e^t-1)} \\
+        &\le e^{\mu(e^t-1)}.
+    \end{aligned}
+\end{equation*}
+Now, we will use the inequality \ref{e4.1} proven in Task C. For $t>0$ and any
+$\delta$,
+
+\begin{equation*}
+    \begin{aligned}
+        \Pr[Y\ge (1+\delta)\mu] &\le \frac{M_Y(t)}{e^{(1+\delta)t\mu}} \\
+        &\le \frac{e^{\mu(e^t-1)}}{e^{(1+\delta)t\mu}}.
+    \end{aligned}
+\end{equation*}
+Hence, the result is proved.
+ 
+\subsection*{3}
+Using calculus, it can be shown that the expression
+
+\begin{equation*}
+    \frac{e^{\mu(e^t-1)}}{e^{(1+\delta)t\mu}}
+\end{equation*}
+attains its minimum value when $e^t=1+\delta$, i.e.,
+
+\begin{equation*}
+    \begin{aligned}
+        \Pr[Y\ge (1+\delta)\mu] &\le \frac{e^{\mu((1+\delta)-1)}}
+        {e^{(1+\delta)\ln(1+\delta)\mu}} \\
+        &\le \frac{e^{\mu\delta}}{e^{(1+\delta)\mu\ln(1+\delta)}}.
+    \end{aligned}
+\end{equation*}
+Hence, a better bound for $\Pr[Y\ge (1+\delta)\mu]$ is
+
+\begin{equation}
+    \Pr[Y\ge (1+\delta)\mu] \le e^{\mu[\delta-(1+\delta)\ln(1+\delta)]},
+    \label{e4.3}
+\end{equation}
+where $\delta>0$. This constraint on $\delta$ is needed to ensure that $t>0$. 
+For $\delta<0$, we will try to use the other bound \ref{e4.2} derived in Task C.
+For some $t>0$,
+
+\begin{equation*}
+    \begin{aligned}
+        \Pr[Y\le \mu(1+\delta)] &= \Pr[-Y\ge -\mu(1+\delta)] \\
+        &\le e^{t\mu(1+\delta)}M_{(-Y)}(t).
+    \end{aligned}
+\end{equation*}
+Now,
+
+\begin{equation*}
+    \begin{aligned}
+        M_{(-Y)}(t) &= \mathbb{E}[e^{-Yt}] \\
+        &= \left(\mathbb{E}[e^{-Xt}]\right)^n \\
+        &= (1-p+pe^{-t})^n \\
+        &\le e^{np(e^{-t}-1)} \\
+        &\le e^{\mu(e^{-t}-1)}.  
+    \end{aligned}
+\end{equation*}
+Hence,
+
+\begin{equation*}
+    \begin{aligned}
+        \Pr[Y\le\mu(1+\delta)] \le e^{\mu[t(1+\delta)+e^{-t}-1]}.
+    \end{aligned}
+\end{equation*}
+Using calculus, we can see that the RHS has its minima when $t=-\ln(1+\delta)>0$,
+where $\delta>-1$. The inequality must hold for this $t$ too. Hence,
+
+\begin{equation}
+    \begin{aligned}
+        \Pr[Y\le\mu(1+\delta)] &\le e^{\mu[\delta-(1+\delta)\ln(1+\delta)]} 
+        \text{\ for }\, -1<\delta<0 \\
+        \implies \Pr[Y\le\mu(1-\delta)] &\le e^{\mu[-\delta-(1-\delta)
+        \ln(1-\delta)]} \text{\ for }\, 0<\delta<1.
+    \end{aligned}
+    \label{e4.4}
+\end{equation}
+Now, for $0\le\delta\le 1$, we can see that
+
+\begin{equation*}
+    -\delta-(1-\delta)\ln(1-\delta) < \delta-(1+\delta)\ln(1+\delta).
+\end{equation*}
+Hence, using \ref{e4.3} and \ref{e4.4}, for $0<\delta<1$,
+
+\begin{equation}
+    \Pr[|Y-\mu|\ge\delta\mu] \le e^{\mu[-\delta-(1-\delta)\ln(1-\delta)]}.
+    \label{e4.5}
+\end{equation}
+Finally, equations \ref{e4.3}, \ref{e4.4} and \ref{e4.5} provide bounds on
+$Y$.
+
+\begin{tcolorbox}[title=]
+    The resulting best bound for $P[Y \ge (1 + \delta) \mu]$ is called a Chernoff
+    bound and is an example of a \textit{concentration} theorem - it can be shown
+    that most of $Y$'s probability density is concentrated about $\mu$.
+
+    Chernoff bounds are related to the very useful \textit{Central Limit Theorem}
+    and also play critical roles in the analysis of randomized algorithms and
+    the theory of machine learning. They are thus considered a cornerstone of
+    probability theory. It is understood that everyone studying probability must
+    have seen a Chernoff bound - now you know!
+\end{tcolorbox}
+
+\section*{\colS{$\S$} Task E \hfill \normalfont \large [4]}
+
+\begin{tcolorbox}
+    Another important theorem, especially important for estimation using samples:
+    \textit{the weak law of large numbers} (WLLN). We shall try to prove it in
+    this task using the Chernoff bound.
+
+    \vspace{10pt}
+    \begin{mdframed}[backgroundcolor=lightyellow, linecolor=darkyellow,
+    linewidth=1.5pt]
+        \textbf{Theorem 6.}
+        \textit{Let $X_1, \ldots, X_n$ be i.i.d. Bernoulli random variables with
+        each having mean $\mu$. We define $A_n = \frac{\sum_{i = 1}^{n} X_i}{n}$.
+        Then for all $\epsilon > 0$, we have}
+
+        \begin{equation*}
+            \lim_{n \xrightarrow{} \infty} \text{P}[|A_n - \mu| > \epsilon] = 0
+        \end{equation*}
+    \end{mdframed}
+
+    Essentially, the average of the variables has to be roughly constant at the
+    value $\mu$ - it takes on any other value with a probability approaching 0.
+    Intuitively, if you keep sampling from the identical distributions and add up
+    all of them, deviations left of the mean are canceled by deviations right of
+    the mean. The net result is that the sum is always roughly the same -
+    $n\mu$, from which it follows that the mean is always roughly $\mu$.
+
+    Prove WLLN using the Chernoff bound from Task D. If you did not solve Task D,
+    you may provide proof using just the Chebyshev inequality. However, if you did
+    solve it, you should use the Chernoff bound obtained from Task D to prove
+    WLLN.
+\end{tcolorbox}
+
+% Solution E
+
+Continuing from the previous task, define $A_n=\frac{Y}{n}$. Let $\mu$ be the
+expected value of $A_n$. Then, the expected value of $Y$ is $n\mu$. Using the
+bound \ref{e4.5} for Bernoulli random variable, for $0<\delta<1$,
+
+\begin{equation*}
+    \begin{aligned}
+        \Pr[|nA_n-n\mu|\ge n\delta\mu] &\le e^{n\mu[-\delta-(1-\delta)
+        \ln(1-\delta)]} \\
+        \implies \Pr[|A_n-\mu| \ge \delta\mu] &\le 
+        e^{n\mu[-\delta-(1-\delta)\ln(1-\delta)]}.
+    \end{aligned}
+\end{equation*}
+
+Now, for $0<\delta<1$,
+
+\begin{equation*}
+    -\delta-(1-\delta)\ln(1-\delta) < 0.
+\end{equation*}
+
+Hence,
+
+\begin{equation*}
+    \begin{aligned}
+        \lim_{n\rightarrow\infty}\Pr[|A_n-\mu| \ge \delta\mu] &\le
+        \lim_{n\rightarrow\infty}e^{n\mu[-\delta-(1-\delta)\ln(1-\delta)]} \\
+        &= 0.
+    \end{aligned}
+\end{equation*}
+
+For $\delta>1$ and $0<\delta_1<1$, clearly
+
+\begin{equation*}
+    \begin{aligned}
+        \lim_{n\rightarrow\infty}\Pr[|A_n-\mu|\ge\delta\mu] &\le
+        \lim_{n\rightarrow\infty}\Pr[|A_n-\mu|\ge\delta_1\mu] \\
+        &= 0.
+    \end{aligned}
+\end{equation*}
+
+Hence, $\forall\epsilon>0$,
+
+\begin{equation*}
+    \lim_{n\rightarrow\infty}\Pr[|A_n-\mu| > \epsilon] = 0.
+\end{equation*}
+
+This proves the weak law of large numbers for Bernoulli random variable.
